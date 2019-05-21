@@ -30,4 +30,7 @@ https://data.oecd.org/
 
 ### Similar visualizations
 
+https://wid.world/world/#sptinc_p99p100_z/US;FR;DE;CN;ZA;GB;WO;NL/last/eu/k/p/yearly/s/false/3.7754999999999996/30/curve/false/country
+
+
 ### Hardest parts
