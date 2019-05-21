@@ -31,6 +31,6 @@ https://data.oecd.org/
 ### Similar visualizations
 
 Take this example from the World Inequality Database:
-![bad example](screenshots/01.png "Logo Title Text 1")
+![bad example](proposal_screenshots/01.png "Logo Title Text 1")
 
 ### Hardest parts
