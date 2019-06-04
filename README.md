@@ -12,6 +12,9 @@ The solution is a visualization of inequality data in human terms, for people wh
 
 ### Main features
 
+![idea](proposal_screenshots/02.png "idea")
+
+
 #### Minimum viable product
 View 1 : a world map where the user can select a country. Country color based on some measure of inequality.
 View 2: a country's national income (or wealth) divided over 10 or 100 people. The representation of the share of income (or wealth) can be a bar chart where the bars are made to look like money, or parts of a pie chart.
@@ -32,7 +35,7 @@ D3 datamap,
 ### Similar visualizations
 
 Take this example from the World Inequality Database:
-![bad example](proposal_screenshots/01.png "Logo Title Text 1")
+![bad example](proposal_screenshots/01.png "I don't like this")
 It's unclear what the % share buttons do, the line graph at the bottom is not too informative. The whole visualization does not communicate anything to anyone who is not already very interested in this subject.
 
 ### Hardest parts
