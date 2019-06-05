@@ -1,5 +1,5 @@
-const w = 1024;
-const h = 480;
+const w = 800;
+const h = 400;
 
 const COLORLEGENDHEIGHT = .5 * h;
 const COLORLEGENDWIDTH = 24;
@@ -12,21 +12,25 @@ const margin = {
 };
 
 const DEFAULTYEAR = 2015;
-const DEFAULTCOUNTRY = "CHN";
+const DEFAULTCOUNTRY = "NLD";
 
 const SPEED = 500;
 
+GINICOLORS = ["#fde0dd", "#c51b8a"]
+
 window.onload = function() {
 
-    let requests = [d3v5.json("data/life_expectancy_after.json")]
+    let requests = [d3v5.json("data/income_post_tax.json"), d3v5.json("data/gini_post_tax.json")]
 
     Promise.all(requests).then(function(response) {
 
 
+
+
         let years = new Set();
 
-        for (i = 0; i < response[0].length; i++) {
-            years.add(response[0][i].Year);
+        for (i = 0; i < response[1].length; i++) {
+            years.add(response[1][i].Year);
         }
         years = Array.from(years);
         years.sort();
@@ -39,9 +43,11 @@ window.onload = function() {
             .text(d => d);
 
 
-        let life_expectancy_total = response[0].filter(d => d.Variable == "Total population at birth");
+        let income_post_tax = response[0]
+        let gini_post_tax = response[1]
+        console.log(gini_post_tax)
 
-        drawMap(life_expectancy_total, DEFAULTYEAR);
+        drawMap(gini_post_tax, DEFAULTYEAR);
 
 
         yearOptions.on("change", function() {
@@ -49,7 +55,8 @@ window.onload = function() {
         });
 
 
-        dataCountry = response[0].filter(d => d.COU == DEFAULTCOUNTRY);
+        dataCountry = response[0].filter(d => d.ISO == DEFAULTCOUNTRY);
+
         drawLineGraph(response[0]);
         drawLineGraph.update(DEFAULTCOUNTRY);
 
@@ -118,7 +125,7 @@ function drawLineGraph(dataset) {
 
         .attr("transform", "rotate(-90)")
         .style("fill", "black")
-        .text("life expectancy (years)");
+        .text("share of income");
 
 
     // Define the line for the graph.
@@ -170,15 +177,15 @@ function drawLineGraph(dataset) {
         let t = d3v5.transition().duration(speed);
 
 
-        countryDataTotal = dataHere.filter(d => d.COU == countryName && d.Variable == "Total population at birth");
-        countryDataFemales = dataHere.filter(d => d.COU == countryName && d.Variable == "Females at birth");
-        countryDataMales = dataHere.filter(d => d.COU == countryName && d.Variable == "Males at birth");
+        countryDataTotal = dataHere.filter(d => d.ISO == countryName && d.Variable == "Total population at birth");
+        countryDataFemales = dataHere.filter(d => d.ISO == countryName && d.Variable == "Females at birth");
+        countryDataMales = dataHere.filter(d => d.ISO == countryName && d.Variable == "Males at birth");
 
 
-        let ageMax = d3v5.max(countryDataTotal, d => d.Value);
+        let giniMax = d3v5.max(countryDataTotal, d => d.Value);
 
         let scaleFactor = 1.1;
-        yScale.domain([0, ageMax * scaleFactor]);
+        yScale.domain([0, giniMax * scaleFactor]);
 
 
         // Lines.
@@ -345,12 +352,12 @@ function drawMap(dataset, year) {
 
     let defaultFillColor = '#B8B8B8';
     let colorScale = d3v5.scaleLinear()
-        .range(['#f03b20', '#ffeda0'])
+        .range(GINICOLORS)
 
 
     let colorMap = {};
     dataHere.forEach(function(item) {
-        let iso = item.COU;
+        let iso = item.ISO;
         let value = item.Value;
         colorMap[iso] = {
             numberOfThings: value,
@@ -363,11 +370,13 @@ function drawMap(dataset, year) {
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, data) {
                 drawLineGraph.update(geography.id, SPEED);
+                console.log(dataHere.filter(d => d.Year == year && d.ISO == geography.id))
+                console.log(geography.id);
             });
         },
         geographyConfig: {
             highlightFillColor: function(data) {
-                if (data && data.fillColor != null) {
+                if (data && data.fillColor != null && data.fillColor != NaN) {
                     return data.fillColor;
                 } else {
                     return defaultFillColor;
@@ -404,7 +413,7 @@ function drawMap(dataset, year) {
 
 
     let legendScale = d3v5.scaleLinear()
-        .range(['#f03b20', '#ffeda0'])
+        .range(GINICOLORS)
         .domain([0, COLORLEGENDHEIGHT]);
 
 
@@ -425,7 +434,7 @@ function drawMap(dataset, year) {
         .attr("y", -8)
         .style("text-anchor", "start")
         .style("fill", "black")
-        .text("total life expectancy (years)");
+        .text("gini coefficient after taxes");
 
     // Title.
     svg.append("text")
@@ -434,7 +443,7 @@ function drawMap(dataset, year) {
         .attr("class", "mapTitle")
         .style("text-anchor", "middle")
         .style("fill", "black")
-        .text("Life expectancy across the world");
+        .text("gini-coefficient");
 
 
     let pallete = svg.append('g')
@@ -467,15 +476,22 @@ function drawMap(dataset, year) {
         let t = d3v5.transition().duration(speed);
 
         let yearData = dataHere.filter(d => (d.Year == year));
+        console.log(yearData)
 
-        let ageMax = d3v5.max(yearData, d => d.Value);
-        let ageMin = d3v5.min(yearData, d => d.Value);
+        let giniMax = d3v5.max(yearData, d => d.Value);
+        let giniMin = d3v5.min(yearData, d => d.Value);
 
 
-        colorScale.domain([ageMin, ageMax]);
+        if (giniMax == giniMin) {
+            giniMax *= 1.1;
+            giniMin *= 0.9;
+        }
+
+
+        colorScale.domain([giniMin, giniMax]);
 
         // Set and update the axis of the legend.
-        dataToLegendScale.domain([ageMin, ageMax]);
+        dataToLegendScale.domain([giniMin, giniMax]);
         svg.selectAll(".colorAxis").transition(t).call(legendAxis);
 
 
@@ -488,7 +504,7 @@ function drawMap(dataset, year) {
 
         // Update the colors of countries with data.
         yearData.forEach(function(item) {
-            let iso = item.COU;
+            let iso = item.ISO;
             let value = item.Value;
             colorMap[iso] = {
                 numberOfThings: value,
