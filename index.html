@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Linked views</title>
+    <link rel="stylesheet" href="index.css">
+    <script type="text/javascript" src="d3/d3.v5.js"></script>
+    <script>
+      d3v5 = d3;
+      window.d3 = null;
+    </script>
+
+    <!-- Import D3 V3 and TopoJSON -->
+    <script type="text/javascript" src="d3/d3.v3.min.js"></script>
+    <script src="d3/topojson.min.js"></script>
+    <script src="d3/datamaps.world.min.js"></script>
+
+
+</head>
+
+<body>
+    <script src="inequality.js" charset="utf-8"></script>
+
+    <div class="container">
+        <h1>Inequality</h1>
+
+        <p>
+            Leo Schreuders, student ID 5742978, for the course Programmeerproject
+            at UvA, spring 2019.
+        </p>
+
+        <p>
+            description
+        </p>
+
+        <p>
+            Source: World Inequality Database
+        </p>
+
+        <label class="dropdown">
+            Select year:
+            <select id="yearSelect"></select>
+        </label>
+
+
+        <label class="switch">
+            Taxes:
+            <input type="checkbox">
+        </label>
+
+
+        <div id="mapContainer">
+        </div>
+
+        <div>
+
+            <svg id="lineSVG"></svg>
+
+        </div>
+
+
+        <div id='tooltip' style='position:absolute;background-color:lightgray;padding:5px'></div>
+    </div>
+
+</body>
+
+</html>

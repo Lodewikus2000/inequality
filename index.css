@@ -1,0 +1,65 @@
+body {
+  font-family: helvetica, sans-serif;
+  background-color: #F8F8F8	;
+  font-size: 1em;
+}
+
+h1 {
+  color: #66c2a5;
+}
+
+svg {
+  display: block;
+}
+
+.container {
+  max-width: 1024px;
+  margin: auto;
+}
+
+
+
+#mapContainer {
+
+}
+
+.lineTotal {
+    fill: none;
+    stroke: #66c2a5;
+    stroke-width: 3;
+}
+
+.lineFemales {
+    fill: none;
+    stroke: #fc8d62;
+    stroke-width: 3;
+}
+
+.lineMales {
+    fill: none;
+    stroke: #8da0cb;
+    stroke-width: 3;
+}
+
+.TotalLegend {
+    fill: #66c2a5;
+}
+
+.FemalesLegend {
+    fill: #fc8d62;
+}
+
+.MalesLegend {
+    fill: #8da0cb;
+}
+
+#tooltip {
+  min-width: 100px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  font-size: .8em;
+}
+
+.legendText {
+  font-size: .8em;
+}
