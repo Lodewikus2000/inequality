@@ -1,5 +1,7 @@
 # inequality
 
+https://lodewikus2000.github.io/inequality/
+
 ## Problem statement
 
 Data on inequality is widely available, but there is no easy to understand visualization of this data. Complicated line graphs of gini coefficients or bar charts of share of the 1% mean don't communicate the data clear enough.
@@ -7,7 +9,7 @@ Data on inequality is widely available, but there is no easy to understand visua
 
 ## Solution
 
-The solution is a visualization of inequality data in human terms, for people who are not experts at readings graphs, mainly focused on income and wealth inequality, in a relatable way. 
+The solution is a visualization of inequality data in human terms, for people who are not experts at readings graphs, mainly focused on income and wealth inequality, in a relatable way.
 
 
 ### Main features
@@ -30,7 +32,7 @@ https://wid.world/
 https://data.oecd.org/
 
 ### External components
-D3 datamap, 
+D3 datamap,
 
 ### Similar visualizations
 
