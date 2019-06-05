@@ -11,6 +11,9 @@ I will use pandas in python to import the csv, filter if, and then save it in JS
 
 
 ## a diagram with an overview of the technical components of your app (visualizations, scraper etc etc)
+
+![idea](doc/02.png "idea")
+
 1: World map. Country code calculated based on gini coefficient with a d3 colorScale. Mousing over the country shows the number of the gini coefficient. A legend shows the relationship between colors and gini values. Clicking a country changes views 2 and 3 to display information of the clicked country.
 
 2: Pie chart. Pie chart will represent 100 percent of the national income of a country. It will be divided into 10 parts, every representing the share of the national income of an income group. There will be 10 groups, each representing 10% of the population. Preferably, parts of the pie chart will move to the 10 groups (represented by images of people). Not sure yet how to do this.
