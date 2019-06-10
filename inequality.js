@@ -1,8 +1,15 @@
-const w = 800;
-const h = 400;
+const mapW = 800;
+const mapH = 400;
 
-const COLORLEGENDHEIGHT = .5 * h;
+const COLORLEGENDHEIGHT = .5 * mapH;
 const COLORLEGENDWIDTH = 24;
+
+
+const pieW = 300;
+const pieH = 300;
+const pieMargin = 10;
+const pieRadius = (pieW - pieMargin) / 2;
+
 
 const margin = {
     left: 20,
@@ -20,18 +27,32 @@ GINICOLORS = ["#fde0dd", "#c51b8a"]
 
 window.onload = function() {
 
-    let requests = [d3v5.json("data/income_post_tax.json"), d3v5.json("data/gini_post_tax.json")]
+    let requests = [d3v5.json("data/gini_post_tax.json"), d3v5.json("data/income_post_tax.json"), d3v5.json("data/income_pre_tax.json")]
 
     Promise.all(requests).then(function(response) {
 
+        let gini_post_tax = response[0]
+
+
+        let income_post_tax = response[1]
+
+
+        let income_pre_tax = response[2]
+
+        let income_post_tax_top10 = income_post_tax.filter(d => d.Percentile == "p90p100")
+        let income_pre_tax_top10 = income_pre_tax.filter(d => d.Percentile == "p90p100")
 
 
 
         let years = new Set();
+        for (i = 0; i < response.length; i++) {
+            for (j = 0; j < response[i].length; j++) {
 
-        for (i = 0; i < response[1].length; i++) {
-            years.add(response[1][i].Year);
-        }
+                years.add(response[i][j].Year);
+
+            };
+        };
+
         years = Array.from(years);
         years.sort();
 
@@ -43,25 +64,156 @@ window.onload = function() {
             .text(d => d);
 
 
-        let income_post_tax = response[0]
-        let gini_post_tax = response[1]
-        console.log(gini_post_tax)
 
-        drawMap(gini_post_tax, DEFAULTYEAR);
+
+        drawMap([income_pre_tax_top10, income_post_tax_top10], DEFAULTYEAR, ["top 10% income share before taxes", "top 10% income share after taxes"] );
 
 
         yearOptions.on("change", function() {
-            drawMap.update(this.value, SPEED);
+            drawMap.update(this.value, SPEED, d3v5.select("#taxesToggle").property("checked"));
         });
 
 
-        dataCountry = response[0].filter(d => d.ISO == DEFAULTCOUNTRY);
+        drawPie([income_pre_tax, income_post_tax]);
 
-        drawLineGraph(response[0]);
-        drawLineGraph.update(DEFAULTCOUNTRY);
+        d3v5.select("#taxesToggle").on("change", checkTax);
+
+        function checkTax() {
+            if (d3v5.select("#taxesToggle").property("checked")) {
+                drawMap.setTax(true);
+                drawPie.setTax(true);
+            } else {
+                drawMap.setTax(false);
+                drawPie.setTax(false);
+            }
+        }
+
+
 
     });
 };
+
+function drawPie(dataset) {
+// based on https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c/22619fa86de2045b6eeb4060e747c5076569ec47
+
+    drawPie.update = update;
+    drawPie.setTax = setTax;
+    drawPie.redraw = redraw;
+
+    let dataHere = dataset;
+
+    let currentCountry = DEFAULTCOUNTRY;
+
+    let currentYear = DEFAULTYEAR;
+
+    let currentData;
+
+
+    let svg = d3v5.select("#pieChart")
+        .attr("width", pieW)
+        .attr("height", pieH)
+        .append("g")
+        .attr("transform", "translate(" + (pieW / 2) + "," + (pieH / 2) + ")");
+
+    let pieColor = d3v5.scaleLinear()
+        .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+        .range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'])
+
+
+
+    let pie = d3v5.pie()
+        .value(d => d.Value);
+
+
+
+    let arc = d3v5.arc()
+        .innerRadius(0)
+        .outerRadius(pieRadius);
+
+
+    function arcTween(a) {
+        const i = d3.interpolate(this._current, a);
+        this._current = i(1);
+        return (t) => arc(i(t));
+    }
+
+
+
+    update(DEFAULTCOUNTRY, DEFAULTYEAR, false);
+
+
+    function setTax(taxesBool) {
+        if (taxesBool){
+            currentData = dataHere[1].filter(d => d.ISO == currentCountry && d.Year == currentYear);
+        } else {
+            currentData = dataHere[0].filter(d => d.ISO == currentCountry && d.Year == currentYear);
+        }
+        // Sort the data by its percentiles.
+        currentData.sort(function(a, b) {
+
+            return a.Percentile.localeCompare(b.Percentile);
+
+        });
+
+
+        redraw();
+    }
+
+    function update(countryName, year, taxesBool) {
+
+        currentCountry = countryName;
+        currentYear = year;
+
+
+        if (taxesBool){
+            currentData = dataHere[1].filter(d => d.ISO == currentCountry && d.Year == currentYear);
+        } else {
+            currentData = dataHere[0].filter(d => d.ISO == currentCountry && d.Year == currentYear);
+        }
+        // Sort the data by its percentiles.
+        currentData.sort(function(a, b) {
+
+            return a.Percentile.localeCompare(b.Percentile);
+
+        });
+
+
+        redraw();
+
+
+    };
+
+
+    function redraw() {
+
+        console.log("de data in de update van de pie chart");
+        console.log(currentData);
+
+
+
+        let path = svg.selectAll("path")
+            .data(pie(currentData));
+
+        path.transition().duration(1000).attrTween("d", arcTween);
+
+        path.enter().append("path")
+            .attr("fill", function(d, i) {
+                return pieColor(i);
+            })
+            .attr("d", arc)
+            .attr("stroke", "white")
+            .attr("stroke-width", "2px")
+            .each(function(d) { this._current = d; });
+    };
+
+
+
+};
+
+
+
+
+
 
 
 function drawLineGraph(dataset) {
@@ -71,8 +223,8 @@ function drawLineGraph(dataset) {
 
     let dataHere = dataset;
 
-    let width = w - margin.left - margin.right;
-    let height = h - margin.top - margin.bottom;
+    let width = mapW - margin.left - margin.right;
+    let height = mapH - margin.top - margin.bottom;
 
     yearMax = d3v5.max(dataHere, d => d.Year);
     yearMin = d3v5.min(dataHere, d => d.Year);
@@ -139,7 +291,7 @@ function drawLineGraph(dataset) {
 
 
     let title = svg.append("text")
-        .attr("x", w / 2)
+        .attr("x", mapW / 2)
         .attr("y", 16)
         .attr("class", "lineTitle")
         .style("text-anchor", "middle")
@@ -340,38 +492,36 @@ function drawLineGraph(dataset) {
 }
 
 
-function drawMap(dataset, year) {
+function drawMap(dataset, year, labels) {
     // The year determines what year the map shows initially.
 
     drawMap.update = update;
+    drawMap.setTax = setTax;
+
+    var dataHere = dataset;
+    var labelsHere = labels
+
     // Help from http://jsbin.com/kuvojohapi/1/edit?html,output.
 
-    d3v5.select("#mapContainer").style("width", w + "px").style("height", h + "px").style("position", "relative");
+    d3v5.select("#mapContainer").style("width", mapW + "px").style("height", mapH + "px").style("position", "relative");
 
-    let dataHere = dataset;
+
 
     let defaultFillColor = '#B8B8B8';
     let colorScale = d3v5.scaleLinear()
         .range(GINICOLORS)
 
 
-    let colorMap = {};
-    dataHere.forEach(function(item) {
-        let iso = item.ISO;
-        let value = item.Value;
-        colorMap[iso] = {
-            numberOfThings: value,
-            fillColor: defaultFillColor
-        }
-    });
+    var colorMap = {};
+
 
     let map = new Datamap({
         element: document.getElementById("mapContainer"),
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, data) {
-                drawLineGraph.update(geography.id, SPEED);
-                console.log(dataHere.filter(d => d.Year == year && d.ISO == geography.id))
-                console.log(geography.id);
+                let yearSelect = d3v5.select('#yearSelect');
+                drawPie.update(geography.id, yearSelect.node().value, d3v5.select("#taxesToggle").property("checked") );
+
             });
         },
         geographyConfig: {
@@ -408,6 +558,7 @@ function drawMap(dataset, year) {
     });
 
 
+
     let dataToLegendScale = d3v5.scaleLinear()
         .range([COLORLEGENDHEIGHT, 0]);
 
@@ -418,7 +569,7 @@ function drawMap(dataset, year) {
 
 
     let legendAxis = g => g
-        .attr("transform", "translate(" + (margin.left + COLORLEGENDWIDTH) + "," + (h - margin.bottom - COLORLEGENDHEIGHT) + ")")
+        .attr("transform", "translate(" + (margin.left + COLORLEGENDWIDTH) + "," + (mapH - margin.bottom - COLORLEGENDHEIGHT) + ")")
         .call(d3v5.axisRight(dataToLegendScale));
 
 
@@ -432,18 +583,17 @@ function drawMap(dataset, year) {
         .append("text")
         .attr("x", -COLORLEGENDWIDTH)
         .attr("y", -8)
+        .attr("class", "colorAxisTitle")
         .style("text-anchor", "start")
-        .style("fill", "black")
-        .text("gini coefficient after taxes");
+        .style("fill", "black");
 
     // Title.
     svg.append("text")
-        .attr("x", w / 2)
+        .attr("x", mapW / 2)
         .attr("y", 16)
         .attr("class", "mapTitle")
         .style("text-anchor", "middle")
-        .style("fill", "black")
-        .text("gini-coefficient");
+        .style("fill", "black");
 
 
     let pallete = svg.append('g')
@@ -462,20 +612,83 @@ function drawMap(dataset, year) {
         })
         .attr('x', margin.left)
         .attr('y', function(d, i) {
-            return h - margin.bottom - (i + 1) * (COLORLEGENDHEIGHT / legendData.length);
+            return mapH - margin.bottom - (i + 1) * (COLORLEGENDHEIGHT / legendData.length);
         })
         .attr('width', COLORLEGENDWIDTH)
         .attr('height', COLORLEGENDHEIGHT / legendData.length);
 
 
-    update(year, 0);
+
+    setTax(false);
+
+    function setTax(taxesBool) {
+        dataHere = dataset;
 
 
-    function update(year, speed) {
+        if (taxesBool) {
+            dataHere[1].forEach(function(item) {
+                let iso = item.ISO;
+                let value = item.Value;
+                colorMap[iso] = {
+                    numberOfThings: value,
+                    fillColor: defaultFillColor
+                }
+            });
+        } else {
+            dataHere[0].forEach(function(item) {
+                let iso = item.ISO;
+                let value = item.Value;
+                colorMap[iso] = {
+                    numberOfThings: value,
+                    fillColor: defaultFillColor
+                }
+            });
+        }
 
+
+        if (taxesBool) {
+            svg.selectAll(".colorAxisTitle")
+                .text(labelsHere[1]);
+
+            // Title.
+            svg.selectAll(".mapTitle")
+                .text(labelsHere[1]);
+        } else {
+            svg.selectAll(".colorAxisTitle")
+                .text(labelsHere[0]);
+
+            // Title.
+            svg.selectAll(".mapTitle")
+                .text(labelsHere[0]);
+        }
+
+
+
+        update(year, 0, taxesBool);
+    };
+
+
+
+
+
+
+    function update(year, speed, taxesBool) {
+
+        let yearData;
+
+        console.log("voor de filter:")
+        console.log(dataHere);
         let t = d3v5.transition().duration(speed);
+        if (taxesBool) {
+            console.log("here");
+            yearData = dataHere[1].filter(d => (d.Year == year));
+        } else {
+            console.log("orrr here");
+            yearData = dataHere[0].filter(d => (d.Year == year));
+        }
 
-        let yearData = dataHere.filter(d => (d.Year == year));
+
+
         console.log(yearData)
 
         let giniMax = d3v5.max(yearData, d => d.Value);

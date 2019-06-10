@@ -8,9 +8,7 @@ h1 {
   color: #66c2a5;
 }
 
-svg {
-  display: block;
-}
+
 
 .container {
   max-width: 1024px;
@@ -62,4 +60,19 @@ svg {
 
 .legendText {
   font-size: .8em;
+}
+
+
+
+#pieChartContainer svg {
+  margin:auto;
+  display:inherit;
+}
+text {
+  font: 10px sans-serif;
+}
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
