@@ -11,14 +11,16 @@ from collections import defaultdict
 
 
 INPUT_CSV = ["..\\data\\income_post_tax.csv", "..\\data\\gini_post_tax.csv", "..\\data\\income_pre_tax.csv"]
+LABELS = ["income post tax", "gini post tax", "income pre tax"]
 OUTPUT_JSON = ["..\\data\\income_post_tax.json", "..\\data\\gini_post_tax.json", "..\\data\\income_pre_tax.json"]
+dataframes = []
 
 
 
 if __name__ == '__main__':
     for i in range(len(INPUT_CSV)):
         pd.set_option("display.max_columns", 999)
-        df = pd.read_csv(INPUT_CSV[i], delimiter=';', header=None, names=["Country", "Variable", "Percentile", "Year", "Value"], usecols=["Country", "Percentile", "Year", "Value"]) #, usecols=["COU", "Country", "Variable", "Year", "Value"])
+        df = pd.read_csv(INPUT_CSV[i], delimiter=';', header=None, names=["Country", "Variable", "Percentile", "Year", "Value"], usecols=["Country", "Variable", "Percentile", "Year", "Value"]) #, usecols=["COU", "Country", "Variable", "Year", "Value"])
 
 
         country_map = convert.map_countries();
@@ -39,6 +41,10 @@ if __name__ == '__main__':
         # df = df[df.AGE == "TOT"]
         # df = df.set_index("TIME")
 
+
+        df = df.assign(Variable=LABELS[i])
+
+
         df = df[pd.to_numeric(df["Value"], errors="coerce").notnull()]
         df["Value"] = pd.to_numeric(df["Value"], errors="coerce")
 
@@ -52,3 +58,14 @@ if __name__ == '__main__':
 
         with open(OUTPUT_JSON[i], 'w') as outfile:
             outfile.write(json_data)
+
+        dataframes.append(df)
+
+
+
+    total = pd.concat(dataframes)
+
+    json_data = total.to_json(orient='records')
+
+    with open("..\\data\\total.json", 'w') as outfile:
+        outfile.write(json_data)

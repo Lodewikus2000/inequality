@@ -31,7 +31,11 @@ This works by sending the geograhpy.id to a new function to update the pie chart
 Needed:
 - data of gini-coefficient;
 - datamaps plugin.
-There will be a function to initialize the map, used once, and an update function to fill the colors for the year and the choice of variable (post or pre gini coefficient).
+The map function:
+ - drawMap()
+ - setYear()
+ - setTax()
+ - update() (always called by setYear and setTax)
 
 ### Pie chart
 Pie chart will represent 100 percent of the national income. It will be divided into 10 parts, each representing the share of the national income of an income group. There will be 10 groups, each representing 10% of the population. Preferably, parts of the pie chart will move to the 10 groups (represented by images of people). Not sure yet how to do this.
@@ -39,6 +43,11 @@ representing the national income for a country where the pieces are spread over 
 Needed:
 - income data for different percentiles;
 - pie chart code (d3.pie).
+The map function:
+ - drawPie()
+ - setYear()
+ - setTax()
+ - update() (always called by setYear and setTax)
 
 
 ### Line graph
