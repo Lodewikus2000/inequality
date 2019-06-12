@@ -23,6 +23,11 @@ I will use pandas in python to import the csv, filter if, and then save it in JS
 
 ## Components
 
+Some global attributes:
+taxOn (bool): are the taxes on or off;
+currentCountry: ISO code of the last country the user clicked on;
+currentYear: last year the user selected;
+
 ### Map
 Country code calculated based on gini coefficient with a d3 colorScale. Mousing over the country shows the number of the gini coefficient.
 A legend shows the relationship between colors and gini values.
@@ -32,10 +37,8 @@ Needed:
 - data of gini-coefficient;
 - datamaps plugin.
 The map function:
- - drawMap()
- - setYear()
- - setTax()
- - update() (always called by setYear and setTax)
+ - drawMap(dataset)
+ - update(speed)
 
 ### Pie chart
 Pie chart will represent 100 percent of the national income. It will be divided into 10 parts, each representing the share of the national income of an income group. There will be 10 groups, each representing 10% of the population. Preferably, parts of the pie chart will move to the 10 groups (represented by images of people). Not sure yet how to do this.
@@ -43,20 +46,20 @@ representing the national income for a country where the pieces are spread over 
 Needed:
 - income data for different percentiles;
 - pie chart code (d3.pie).
-The map function:
- - drawPie()
- - setYear()
- - setTax()
- - update() (always called by setYear and setTax)
+The pie function:
+ - drawPie(dataset)
+ - update(speed)
 
 
 ### Line graph
 X axis: years. Y axis: income share. Every income group will have a line.
 Problem: how many lines? 10 lines for 10 groups is a bit much.
 Needed:
--
 - income data for different percentiles over time;
 - line chart code (d3, percentages-to-pixels-scales).
+The line function:
+ - drawLine(dataset)
+ - update(speed)
 
 
 

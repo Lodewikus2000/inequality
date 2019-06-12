@@ -1,16 +1,6 @@
 const mapW = 800;
 const mapH = 400;
 
-const COLORLEGENDHEIGHT = .5 * mapH;
-const COLORLEGENDWIDTH = 24;
-
-
-const pieW = 400;
-const pieH = 400;
-const pieMargin = 20;
-const pieRadius = (pieW / 2) - pieMargin;
-
-
 const margin = {
     left: 20,
     right: 20,
@@ -18,18 +8,43 @@ const margin = {
     bottom: 40
 };
 
-const DEFAULTYEAR = 2015;
-const DEFAULTCOUNTRY = "NLD";
+const COLORLEGENDHEIGHT = .5 * mapH;
+const COLORLEGENDWIDTH = 24;
+
+
+const pieW = 400;
+const pieH = 400;
+const pieRadius = (pieW - margin.top - margin.left) / 2;
+
+
+const lineChartW = 800;
+const lineChartH = 400;
+
+
+
+
+
+
+var years = new Set();
+var currentCountry = "NLD"
+var currentCountryName = "Netherlands"
+var taxOn = false;
+var currentYear = 2015;
+
+
 
 const SPEED = 500;
 
-GINICOLORS = ["#fde0dd", "#c51b8a"]
+INCOMESCALECOLORS = ["#fde0dd", "#c51b8a"];
+INCOMEGROUPCOLORS = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
 
 window.onload = function() {
 
     let requests = [d3v5.json("data/gini_post_tax.json"), d3v5.json("data/income_post_tax.json"), d3v5.json("data/income_pre_tax.json"), d3v5.json("data/total.json")]
 
     Promise.all(requests).then(function(response) {
+
+        var currentCountry;
 
         let allData = response[3]
 
@@ -45,14 +60,12 @@ window.onload = function() {
 
         let incomeData = allData.filter(d => d.Variable == "income post tax" || d.Variable == "income pre tax");
 
-        console.log(incomeTop10);
 
-        let years = new Set();
+
+        console.log(incomeData);
 
         for (j = 0; j < allData.length; j++) {
-
             years.add(allData[j].Year);
-
         };
 
 
@@ -63,35 +76,45 @@ window.onload = function() {
         yearOptions.selectAll("option")
             .data(years.reverse())
             .enter().append("option")
-            .property("selected", d => d === DEFAULTYEAR)
+            .property("selected", d => d === currentYear)
             .text(d => d);
 
 
 
 
         drawMap(incomeTop10);
+        drawPie(incomeData);
+        drawLine(incomeData);
 
 
         yearOptions.on("change", function() {
 
-            drawMap.setYear(yearOptions.node().value);
-            drawPie.setYear(yearOptions.node().value);
+            currentYear = yearOptions.node().value;
+            drawMap.update(SPEED);
+            drawPie.update(SPEED);
 
         });
 
 
-        drawPie(incomeData);
+
 
         d3v5.select("#taxesToggle").on("change", checkTax);
 
         function checkTax() {
             if (d3v5.select("#taxesToggle").property("checked")) {
-                drawMap.setTax(true);
-                drawPie.setTax(true);
+
+                taxOn = true;
+
             } else {
-                drawMap.setTax(false);
-                drawPie.setTax(false);
+
+                taxOn = false;
+
             }
+
+            drawMap.update(SPEED);
+            drawPie.update(SPEED);
+            drawLine.update(SPEED);
+
         }
 
 
@@ -103,36 +126,33 @@ function drawPie(dataset) {
 // based on https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c/22619fa86de2045b6eeb4060e747c5076569ec47
 
     drawPie.update = update;
-    drawPie.setTax = setTax;
-    drawPie.setYear = setYear;
-    drawPie.setCountry = setCountry;
 
-    let taxEffect = false;
+
 
     let dataHere = dataset;
-
-    let currentCountry = DEFAULTCOUNTRY;
-
-    let currentYear = DEFAULTYEAR;
-
     let currentData;
 
 
-    let svg = d3v5.select("#pieChart")
-        .attr("width", pieW)
-        .attr("height", pieH)
-        .append("g")
-        .attr("transform", "translate(" + (pieW / 2) + "," + (pieH / 2) + ")");
-
-    let pieColor = d3v5.scaleLinear()
-        .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-        .range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'])
+    let svg = d3v5.select("#pieChart");
 
     svg.append("text")
-        .attr("y", - pieRadius - (pieMargin / 2))
+        .attr("x", pieW / 2)
+        .attr("y", 16)
         .attr("class", "pieTitle")
         .style("text-anchor", "middle")
         .style("fill", "black");
+
+    svg.attr("width", pieW)
+        .attr("height", pieH)
+        .append("g")
+        .attr("class", "pie")
+        .attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + margin.top) + ")");
+
+    let pieColor = d3v5.scaleLinear()
+        .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+        .range(INCOMEGROUPCOLORS)
+
+
 
     let pie = d3v5.pie()
         .value(d => d.Value);
@@ -145,39 +165,20 @@ function drawPie(dataset) {
 
 
     function arcTween(a) {
-        const i = d3.interpolate(this._current, a);
+        const i = d3v5.interpolate(this._current, a);
         this._current = i(1);
         return (t) => arc(i(t));
     }
 
 
 
-    update();
-
-    function setCountry(countryCode) {
-        currentCountry = countryCode;
-        update();
-    };
-
-    function setYear(year){
-        currentYear = year;
-
-        update();
-    }
-
-    function setTax(taxesBool) {
-
-        taxEffect = taxesBool;
-
-        update();
-
-    }
-
-    function update() {
+    update(0);
 
 
+    function update(speed) {
 
-        if (taxEffect){
+
+        if (taxOn){
 
             currentData = dataHere.filter(d => d.ISO == currentCountry && d.Year == currentYear && d.Variable == "income post tax");
 
@@ -196,20 +197,17 @@ function drawPie(dataset) {
         let path;
 
         if (currentData.length == 0) {
-
-            path = svg.selectAll("path")
+            path = svg.select(".pie").selectAll("path")
                 .data(pie([]));
-
         } else {
-
-            path = svg.selectAll("path")
+            path = svg.select(".pie").selectAll("path")
                 .data(pie(currentData));
         }
 
 
-
         path.exit().remove();
-        path.transition().duration(1000).attrTween("d", arcTween);
+
+        path.transition().duration(speed).attrTween("d", arcTween);
 
         path.enter().append("path")
             .attr("fill", function(d, i) {
@@ -221,52 +219,44 @@ function drawPie(dataset) {
             .each(function(d) { this._current = d; });
 
 
-        svg.selectAll(".pieTitle")
-            .text(currentCountry);
+        d3v5.selectAll(".pieTitle")
+            .text(currentCountryName);
 
 
     };
-
-
-
-
-
 };
 
 
 
 
+function drawLine(dataset) {
+    let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
 
 
+    drawLine.update = update;
 
-function drawLineGraph(dataset) {
-    drawLineGraph.update = update;
 
     // Used help from https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0/
 
     let dataHere = dataset;
+    let currentData;
 
-    let width = mapW - margin.left - margin.right;
-    let height = mapH - margin.top - margin.bottom;
-
-    yearMax = d3v5.max(dataHere, d => d.Year);
-    yearMin = d3v5.min(dataHere, d => d.Year);
+    yearMax = d3v5.max(years);
+    yearMin = d3v5.min(years);
 
 
-    let svg = d3v5.select("#lineSVG").attr("width", w).attr("height", h);
+    let svg = d3v5.select("#lineChart").attr("width", lineChartW).attr("height", lineChartH);
 
 
-    let tooltip = d3v5.select('#tooltip');
-    let tooltipLine = svg.append('line');
 
 
     // Scale for x.
     let xScale = d3v5.scaleLinear()
         .domain([yearMin, yearMax])
-        .range([0, width]);
+        .range([0, lineChartW - margin.left - margin.right]);
     // Function for x axis.
     let xAxis = g => g
-        .attr("transform", "translate(" + margin.left + "," + (margin.top + height) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (- margin.top + lineChartH) + ")")
         .call(d3v5.axisBottom(xScale)
             .tickFormat(d3v5.format("d"))
         );
@@ -274,7 +264,7 @@ function drawLineGraph(dataset) {
     svg.append("g")
         .attr("class", "x-axis")
         .append("text")
-        .attr("x", width)
+        .attr("x", margin.left)
         .attr("y", -8)
         .style("text-anchor", "end")
         .style("fill", "black")
@@ -284,7 +274,7 @@ function drawLineGraph(dataset) {
 
 
     // Scale for y.
-    let yScale = d3v5.scaleLinear().range([height, 0]);
+    let yScale = d3v5.scaleLinear().range([lineChartH - margin.top - margin.bottom, 0]);
     // Function for y.
     let yAxis = g => g
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -294,7 +284,7 @@ function drawLineGraph(dataset) {
         .attr("class", "y-axis")
         .append("text")
 
-        .attr("x", -height * .8)
+        .attr("x", -(lineChartH - margin.top - margin.bottom) * .8)
         .attr("y", 16)
         .style("text-anchor", "start")
 
@@ -330,7 +320,7 @@ function drawLineGraph(dataset) {
     let lineLegend = svg.selectAll(".lineLegend").data(legend_keys)
         .enter().append("g")
         .attr("class", "lineLegend")
-        .attr("transform", "translate(" + (margin.left + width * .8) + "," + (height * .8) + ")");
+        .attr("transform", "translate(" + (margin.left + lineChartW * .8) + "," + (lineChartH * .8) + ")");
 
     lineLegend.append("text").text(d => d)
         .attr("class", "legendText")
@@ -347,119 +337,92 @@ function drawLineGraph(dataset) {
         });
 
 
-    function update(countryName, speed) {
+
+    update(0)
+
+
+    function update(speed) {
 
         let t = d3v5.transition().duration(speed);
 
+        if (taxOn) {
+            currentData = dataHere.filter(d => d.Variable == "income post tax" && d.ISO == currentCountry)
+        } else {
+            currentData = dataHere.filter(d => d.Variable == "income pre tax" && d.ISO == currentCountry)
+        }
 
-        countryDataTotal = dataHere.filter(d => d.ISO == countryName && d.Variable == "Total population at birth");
-        countryDataFemales = dataHere.filter(d => d.ISO == countryName && d.Variable == "Females at birth");
-        countryDataMales = dataHere.filter(d => d.ISO == countryName && d.Variable == "Males at birth");
 
 
-        let giniMax = d3v5.max(countryDataTotal, d => d.Value);
+
+        let maxValue = d3v5.max(currentData, d => d.Value);
 
         let scaleFactor = 1.1;
-        yScale.domain([0, giniMax * scaleFactor]);
+        yScale.domain([0, maxValue * scaleFactor]);
 
 
         // Lines.
+        for (i = 0; i < percentiles.length; i++) {
 
-        let lineTotal = svg.selectAll(".lineTotal").data([countryDataTotal]);
-        lineTotal.exit().remove();
-        lineTotal.enter().append("path")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("class", "lineTotal")
-            .merge(lineTotal)
-            .transition(t)
-            .attr("d", valueLine);
+            let lines = svg.selectAll(".line" + percentiles[i]).data([currentData.filter(d => d.Percentile == percentiles[i])]);
 
-        let lineFemales = svg.selectAll(".lineFemales").data([countryDataFemales]);
-        lineFemales.exit().remove();
-        lineFemales.enter().append("path")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("class", "lineFemales")
-            .merge(lineFemales)
-            .transition(t)
-            .attr("d", valueLine);
+            lines.exit().remove();
 
-        let lineMales = svg.selectAll(".lineMales").data([countryDataMales]);
-        lineMales.exit().remove();
-        lineMales.enter().append("path")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("class", "lineMales")
-            .merge(lineMales)
-            .transition(t)
-            .attr("d", valueLine);
+            lines.enter().append("path")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("class", "line" + percentiles[i])
+                .merge(lines)
+                .transition(t)
+                .attr("d", valueLine);
+        }
+
+
+
 
 
         svg.selectAll(".y-axis").transition(t).call(yAxis);
 
         // Title.
-        if (countryDataTotal.length > 0) {
-            title.transition(t).text("Life expectancy in " + countryDataTotal[0].Country);
+        if (currentData.length > 0) {
+            title.transition(t).text("Income shares over time in " + currentCountryName);
         } else {
             title.transition(t).text();
         }
 
 
         // Dots.
+        for (i = 0; i < percentiles.length; i++) {
 
-        let dotTotal = svg.selectAll(".dotTotal").data(countryDataTotal);
-        dotTotal.exit().remove();
-        dotTotal.enter().append("circle") // Uses the enter().append() method
-            .attr("class", "dotTotal") // Assign a class for styling
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .merge(dotTotal)
-            .transition(t)
-            .attr("cx", function(d) {
-                return xScale(d.Year)
-            })
-            .attr("cy", function(d) {
-                return yScale(d.Value)
-            })
-            .attr("r", 2);
+            let dots = svg.selectAll(".dot" + percentiles[i]).data(currentData.filter(d => d.Percentile == percentiles[i]));
 
-        let dotFemales = svg.selectAll(".dotFemales").data(countryDataFemales);
-        dotFemales.exit().remove();
-        dotFemales.enter().append("circle") // Uses the enter().append() method
-            .attr("class", "dotFemales") // Assign a class for styling
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .merge(dotFemales)
-            .transition(t)
-            .attr("cx", function(d) {
-                return xScale(d.Year)
-            })
-            .attr("cy", function(d) {
-                return yScale(d.Value)
-            })
-            .attr("r", 2);
+            dots.exit().remove();
 
-        let dotMales = svg.selectAll(".dotMales").data(countryDataMales);
-        dotMales.exit().remove();
-        dotMales.enter().append("circle") // Uses the enter().append() method
-            .attr("class", "dotMales") // Assign a class for styling
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .merge(dotMales)
-            .transition(t)
-            .attr("cx", function(d) {
-                return xScale(d.Year)
-            })
-            .attr("cy", function(d) {
-                return yScale(d.Value)
-            })
-            .attr("r", 2);
+            dots.enter().append("circle") // Uses the enter().append() method
+                .attr("class", "dot" + percentiles[i]) // Assign a class for styling
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .merge(dots)
+                .transition(t)
+                .attr("cx", function(d) {
+                    return xScale(d.Year)
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.Value)
+                })
+                .attr("r", 1);
+
+        }
+
+
 
 
         // Used this for tooltip: http://bl.ocks.org/wdickerson/64535aff478e8a9fd9d9facccfef8929.
 
-        tooltipBox = svg.append('rect')
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr('width', width)
-            .attr('height', height)
-            .attr('opacity', 0)
-            .on('mousemove', drawTooltip)
-            .on('mouseout', removeTooltip);
+        // tooltipBox = svg.append('rect')
+        //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        //     .attr('width', width)
+        //     .attr('height', height)
+        //     .attr('opacity', 0)
+        //     .on('mousemove', drawTooltip)
+        //     .on('mouseout', removeTooltip);
 
 
         function removeTooltip() {
@@ -515,17 +478,20 @@ function drawLineGraph(dataset) {
 }
 
 
+
+
+
 function drawMap(dataset) {
+
+
     // The year determines what year the map shows initially.
 
     drawMap.update = update;
-    drawMap.setYear = setYear;
-    drawMap.setTax = setTax;
+
 
     var dataHere = dataset;
-    var currentYear = DEFAULTYEAR;
     var currentData;
-    var taxEffect = false;
+
 
     // Help from http://jsbin.com/kuvojohapi/1/edit?html,output.
 
@@ -535,7 +501,7 @@ function drawMap(dataset) {
 
     let defaultFillColor = '#B8B8B8';
     let colorScale = d3v5.scaleLinear()
-        .range(GINICOLORS)
+        .range(INCOMESCALECOLORS)
 
 
     var colorMap = {};
@@ -546,9 +512,10 @@ function drawMap(dataset) {
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, data) {
 
-                let yearSelect = d3v5.select('#yearSelect');
-
-                drawPie.setCountry(geography.id );
+                currentCountry = geography.id;
+                currentCountryName = geography.properties.name;
+                drawPie.update(SPEED);
+                drawLine.update(SPEED);
 
             });
         },
@@ -592,7 +559,7 @@ function drawMap(dataset) {
 
 
     let legendScale = d3v5.scaleLinear()
-        .range(GINICOLORS)
+        .range(INCOMESCALECOLORS)
         .domain([0, COLORLEGENDHEIGHT]);
 
 
@@ -601,7 +568,15 @@ function drawMap(dataset) {
         .call(d3v5.axisRight(dataToLegendScale));
 
 
-    svg = d3v5.select(".datamap");
+    let svg = d3v5.select(".datamap");
+
+    // Title.
+    svg.append("text")
+        .attr("x", mapW / 2)
+        .attr("y", 16)
+        .attr("class", "mapTitle")
+        .style("text-anchor", "middle")
+        .style("fill", "black");
 
     // Reserve an element for the colorLegend's axis
     svg.append("g")
@@ -615,13 +590,7 @@ function drawMap(dataset) {
         .style("text-anchor", "start")
         .style("fill", "black");
 
-    // Title.
-    svg.append("text")
-        .attr("x", mapW / 2)
-        .attr("y", 16)
-        .attr("class", "mapTitle")
-        .style("text-anchor", "middle")
-        .style("fill", "black");
+
 
 
     let pallete = svg.append('g')
@@ -646,31 +615,14 @@ function drawMap(dataset) {
         .attr('height', COLORLEGENDHEIGHT / legendData.length);
 
 
-
-    setTax(false);
-
-    function setTax(taxesBool) {
-
-        taxEffect = taxesBool;
-
-        update();
-    };
+    update(0);
 
 
-
-    function setYear(year){
-        currentYear = year;
-
-
-        update();
-    }
-
-
-    function update() {
+    function update(speed) {
 
         colormap = {}
 
-        if (taxEffect) {
+        if (taxOn) {
 
             currentData = dataHere.filter(d => d.Variable == "income post tax" && d.Year == currentYear)
 
@@ -680,7 +632,7 @@ function drawMap(dataset) {
         }
 
 
-        if (taxEffect) {
+        if (taxOn) {
 
             svg.selectAll(".colorAxisTitle")
                 .text("income share");
@@ -701,7 +653,7 @@ function drawMap(dataset) {
 
 
 
-        let t = d3v5.transition().duration(1000);
+        let t = d3v5.transition().duration(speed);
 
 
         let incomeMax = d3v5.max(currentData, d => d.Value);
@@ -730,7 +682,6 @@ function drawMap(dataset) {
 
         // Update the colors of countries with data.
         currentData.forEach(function(item) {
-            console.log(item.ISO);
             let iso = item.ISO;
             let value = item.Value;
             colorMap[iso] = {

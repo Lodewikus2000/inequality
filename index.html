@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Inequality</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="index.css">
     <script type="text/javascript" src="d3/d3.v5.js"></script>
     <script>
@@ -10,10 +12,13 @@
       window.d3 = null;
     </script>
 
+
     <!-- Import D3 V3 and TopoJSON -->
     <script type="text/javascript" src="d3/d3.v3.min.js"></script>
     <script src="d3/topojson.min.js"></script>
     <script src="d3/datamaps.world.min.js"></script>
+
+
 
 
 </head>
@@ -49,10 +54,13 @@
         </label>
 
 
-        <div id="mapContainer"></div>
+        <div id="top">
+            <div id="mapContainer">
+            </div>
 
-        <div id="pieChartContainer">
-            <svg id="pieChart"></svg>
+            <div id="pieChartContainer">
+                <svg id="pieChart"></svg>
+            </div>
         </div>
 
         <div id="lineChartContainer">

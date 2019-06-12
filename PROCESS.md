@@ -26,7 +26,9 @@ Rewrote drawMap and drawPie to handle data differently. They do not get fed new 
 
 
 # Day 7
-
+Rewrote update functions again. TaxOn, CurrentCountry and currentYear are now set globally.
+Implemented the line chart. No legend yet for pie chart and line chart. (They can share the legend).
+I'm thinking it would be better to not let the year selection have any effect on the map. Perhaps the map should be made from the newest data available (which can differ per country), and the year selector will only have an effect on the pie chart.
 
 
 # Day 8
