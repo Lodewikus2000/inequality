@@ -311,30 +311,30 @@ function drawLine(dataset) {
         .style("fill", "black");
 
 
-    // Draw the legend with help from https://stackoverflow.com/questions/38954316/adding-legends-to-d3-js-line-charts.
-    let legendBoxSize = 10;
-    let legendBoxDistance = 16;
-
-    let legend_keys = ["Females", "Total", "Males"]
-
-    let lineLegend = svg.selectAll(".lineLegend").data(legend_keys)
-        .enter().append("g")
-        .attr("class", "lineLegend")
-        .attr("transform", "translate(" + (margin.left + lineChartW * .8) + "," + (lineChartH * .8) + ")");
-
-    lineLegend.append("text").text(d => d)
-        .attr("class", "legendText")
-        .attr("x", legendBoxDistance)
-        .attr("y", function(d, i) {
-            return i * legendBoxDistance;
-        });
-
-    lineLegend.append("rect")
-        .attr("class", d => d + "Legend")
-        .attr("width", legendBoxSize).attr("height", legendBoxSize)
-        .attr("y", function(d, i) {
-            return i * legendBoxDistance - (legendBoxSize);
-        });
+    // // Draw the legend with help from https://stackoverflow.com/questions/38954316/adding-legends-to-d3-js-line-charts.
+    // let legendBoxSize = 10;
+    // let legendBoxDistance = 16;
+    //
+    // let legend_keys = ["Females", "Total", "Males"]
+    //
+    // let lineLegend = svg.selectAll(".lineLegend").data(legend_keys)
+    //     .enter().append("g")
+    //     .attr("class", "lineLegend")
+    //     .attr("transform", "translate(" + (margin.left + lineChartW * .8) + "," + (lineChartH * .8) + ")");
+    //
+    // lineLegend.append("text").text(d => d)
+    //     .attr("class", "legendText")
+    //     .attr("x", legendBoxDistance)
+    //     .attr("y", function(d, i) {
+    //         return i * legendBoxDistance;
+    //     });
+    //
+    // lineLegend.append("rect")
+    //     .attr("class", d => d + "Legend")
+    //     .attr("width", legendBoxSize).attr("height", legendBoxSize)
+    //     .attr("y", function(d, i) {
+    //         return i * legendBoxDistance - (legendBoxSize);
+    //     });
 
 
 

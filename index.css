@@ -25,6 +25,11 @@ h1 {
   float:left;
 }
 
+#lineChartContainer {
+
+  float: left;
+}
+
 
 .linep0p10 {
     fill: none;
