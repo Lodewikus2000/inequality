@@ -17,8 +17,8 @@ const pieH = 400;
 const pieRadius = (pieW - margin.top - margin.left) / 2;
 
 
-const lineChartW = 800;
-const lineChartH = 400;
+const lineW = 800;
+const lineH = 400;
 
 
 
@@ -172,7 +172,25 @@ function drawPie(dataset) {
 
 
 
+    let tip = d3v5.tip()
+        .attr('class', 'pieTip')
+        .direction("n")
+        .html(function(d) {
+            console.log(d);
+            return d.data.Value;
+
+        });
+
+    svg.call(tip);
+
+
+
     update(0);
+
+
+
+
+
 
 
     function update(speed) {
@@ -211,12 +229,15 @@ function drawPie(dataset) {
 
         path.enter().append("path")
             .attr("fill", function(d, i) {
+                console.log(d);
                 return pieColor(i);
             })
             .attr("d", arc)
             .attr("stroke", "white")
             .attr("stroke-width", "2px")
-            .each(function(d) { this._current = d; });
+            .each(function(d) { this._current = d; })
+            .on('mouseover', d => tip.show(d))
+            .on('mouseout', tip.hide);
 
 
         d3v5.selectAll(".pieTitle")
@@ -230,6 +251,14 @@ function drawPie(dataset) {
 
 
 function drawLine(dataset) {
+
+    let marginHere = {
+        left: 40,
+        right: 20,
+        top: 40,
+        bottom: 40
+    };
+
     let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
 
 
@@ -241,22 +270,21 @@ function drawLine(dataset) {
     let dataHere = dataset;
     let currentData;
 
-    yearMax = d3v5.max(years);
-    yearMin = d3v5.min(years);
 
 
-    let svg = d3v5.select("#lineChart").attr("width", lineChartW).attr("height", lineChartH);
+
+    let svg = d3v5.select("#lineChart").attr("width", lineW).attr("height", lineH);
 
 
 
 
     // Scale for x.
     let xScale = d3v5.scaleLinear()
-        .domain([yearMin, yearMax])
-        .range([0, lineChartW - margin.left - margin.right]);
+        .range([0, lineW - marginHere.left - marginHere.right]);
+
     // Function for x axis.
     let xAxis = g => g
-        .attr("transform", "translate(" + margin.left + "," + (- margin.top + lineChartH) + ")")
+        .attr("transform", "translate(" + marginHere.left + "," + (- marginHere.top + lineH) + ")")
         .call(d3v5.axisBottom(xScale)
             .tickFormat(d3v5.format("d"))
         );
@@ -264,29 +292,30 @@ function drawLine(dataset) {
     svg.append("g")
         .attr("class", "x-axis")
         .append("text")
-        .attr("x", margin.left)
-        .attr("y", -8)
+        .attr("x", lineW - marginHere.right - marginHere.left)
+        .attr("y", 32)
         .style("text-anchor", "end")
         .style("fill", "black")
         .text("year");
-    // Set x axis.
-    svg.selectAll(".x-axis").call(xAxis);
+
 
 
     // Scale for y.
-    let yScale = d3v5.scaleLinear().range([lineChartH - margin.top - margin.bottom, 0]);
+    let yScale = d3v5.scaleLinear().range([lineH - marginHere.top - marginHere.bottom, 0]);
+
     // Function for y.
     let yAxis = g => g
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
         .call(d3v5.axisLeft(yScale));
-    // Element for y.
+
+    // Element for y label.
     svg.append("g")
         .attr("class", "y-axis")
         .append("text")
 
-        .attr("x", -(lineChartH - margin.top - margin.bottom) * .8)
-        .attr("y", 16)
-        .style("text-anchor", "start")
+
+        .attr("y", -32)
+        .style("text-anchor", "end")
 
         .attr("transform", "rotate(-90)")
         .style("fill", "black")
@@ -320,7 +349,7 @@ function drawLine(dataset) {
     // let lineLegend = svg.selectAll(".lineLegend").data(legend_keys)
     //     .enter().append("g")
     //     .attr("class", "lineLegend")
-    //     .attr("transform", "translate(" + (margin.left + lineChartW * .8) + "," + (lineChartH * .8) + ")");
+    //     .attr("transform", "translate(" + (margin.left + lineW * .8) + "," + (lineH * .8) + ")");
     //
     // lineLegend.append("text").text(d => d)
     //     .attr("class", "legendText")
@@ -360,6 +389,13 @@ function drawLine(dataset) {
         yScale.domain([0, maxValue * scaleFactor]);
 
 
+
+        let yearMax = d3v5.max(currentData, d => d.Year);
+        let yearMin = d3v5.min(currentData, d => d.Year);
+
+
+        xScale.domain([yearMin, yearMax])
+
         // Lines.
         for (i = 0; i < percentiles.length; i++) {
 
@@ -368,7 +404,7 @@ function drawLine(dataset) {
             lines.exit().remove();
 
             lines.enter().append("path")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
                 .attr("class", "line" + percentiles[i])
                 .merge(lines)
                 .transition(t)
@@ -380,6 +416,7 @@ function drawLine(dataset) {
 
 
         svg.selectAll(".y-axis").transition(t).call(yAxis);
+        svg.selectAll(".x-axis").transition(t).call(xAxis);
 
         // Title.
         if (currentData.length > 0) {
@@ -398,7 +435,7 @@ function drawLine(dataset) {
 
             dots.enter().append("circle") // Uses the enter().append() method
                 .attr("class", "dot" + percentiles[i]) // Assign a class for styling
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
                 .merge(dots)
                 .transition(t)
                 .attr("cx", function(d) {
@@ -412,68 +449,6 @@ function drawLine(dataset) {
         }
 
 
-
-
-        // Used this for tooltip: http://bl.ocks.org/wdickerson/64535aff478e8a9fd9d9facccfef8929.
-
-        // tooltipBox = svg.append('rect')
-        //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        //     .attr('width', width)
-        //     .attr('height', height)
-        //     .attr('opacity', 0)
-        //     .on('mousemove', drawTooltip)
-        //     .on('mouseout', removeTooltip);
-
-
-        function removeTooltip() {
-
-            if (tooltip) tooltip.style('display', 'none');
-            if (tooltipLine) tooltipLine.attr('stroke', 'none');
-        }
-
-        function drawTooltip() {
-
-            let year = Math.round(xScale.invert(d3v5.mouse(tooltipBox.node())[0]));
-
-            dataYearTotal = countryDataTotal.filter(d => d.Year == year)[0];
-            dataYearFemales = countryDataFemales.filter(d => d.Year == year)[0];
-            dataYearMales = countryDataMales.filter(d => d.Year == year)[0];
-
-
-            if (dataYearTotal == undefined) {
-                dataYearTotal = {
-                    Value: "no data"
-                };
-            };
-            if (dataYearFemales == undefined) {
-                dataYearFemales = {
-                    Value: "no data"
-                };
-            };
-            if (dataYearMales == undefined) {
-                dataYearMales = {
-                    Value: "no data"
-                };
-            };
-
-
-            tooltipLine.attr('stroke', 'black')
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .attr('x1', xScale(year))
-                .attr('x2', xScale(year))
-                .attr('y1', 0)
-                .attr('y2', height);
-
-
-            tooltip
-                .html("<b>" + year + "</b>" + "<br>" +
-                    "Total: " + dataYearTotal.Value + '<br>' +
-                    "Female: " + dataYearFemales.Value + '<br>' +
-                    "Male: " + dataYearMales.Value)
-                .style('display', 'block')
-                .style('left', d3v5.event.pageX + 20 + "px")
-                .style('top', d3v5.event.pageY - 20 + "px")
-        }
     }
 }
 
