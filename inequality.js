@@ -1,20 +1,14 @@
 const mapW = 800;
 const mapH = 400;
 
-const margin = {
-    left: 20,
-    right: 20,
-    top: 40,
-    bottom: 40
-};
 
 const COLORLEGENDHEIGHT = .5 * mapH;
 const COLORLEGENDWIDTH = 24;
 
 
-const pieW = 400;
-const pieH = 400;
-const pieRadius = (pieW - margin.top - margin.left) / 2;
+const pieW = 1000;
+const pieH = 300;
+
 
 
 const lineW = 800;
@@ -22,12 +16,13 @@ const lineH = 400;
 
 
 
+var lastCountry = "NLD";
 
 
 
-var years = new Set();
-var currentCountry = "NLD"
-var currentCountryName = "Netherlands"
+var countries2ISO = {};
+var iso2Countries = {};
+
 var taxOn = false;
 var currentYear = 2015;
 
@@ -44,7 +39,7 @@ window.onload = function() {
 
     Promise.all(requests).then(function(response) {
 
-        var currentCountry;
+
 
         let allData = response[3]
 
@@ -64,58 +59,66 @@ window.onload = function() {
 
         console.log(incomeData);
 
-        for (j = 0; j < allData.length; j++) {
-            years.add(allData[j].Year);
+
+
+        // Make a list of all the countries for which income data is available.
+        for (j = 0; j < incomeData.length; j++) {
+            iso2Countries[incomeData[j].ISO] = incomeData[j].Country;
+            countries2ISO[incomeData[j].Country] = incomeData[j].ISO;
         };
 
 
-        years = Array.from(years);
-        years.sort();
 
-        let yearOptions = d3v5.select("#yearSelect");
-        yearOptions.selectAll("option")
-            .data(years.reverse())
+
+
+
+
+        let countrySelect = d3v5.select("#countrySelect");
+
+        countrySelect.selectAll("option").data(Object.keys(countries2ISO).sort())
             .enter().append("option")
-            .property("selected", d => d === currentYear)
+            .property("selected", d => d === iso2Countries[lastCountry])
             .text(d => d);
 
 
+        countrySelect.on("change", function() {
 
-
-        drawMap(incomeTop10);
-        drawPie(incomeData);
-        drawLine(incomeData);
-
-
-        yearOptions.on("change", function() {
-
-            currentYear = yearOptions.node().value;
-            drawMap.update(SPEED);
-            drawPie.update(SPEED);
+            var countryName = d3.select("#countrySelect").node().value;
+            drawPie.updateCountry(countries2ISO[countryName], SPEED);
+            drawLine.update(countries2ISO[countryName], SPEED)
 
         });
 
 
 
 
-        d3v5.select("#taxesToggle").on("change", checkTax);
+        drawMap(incomeTop10);
+        drawPie(incomeData);
+        drawPie.updateCountry("NLD");
+        drawLine(incomeData);
 
-        function checkTax() {
-            if (d3v5.select("#taxesToggle").property("checked")) {
+        d3v5.select("#yearSelect").on("change", function() {
 
-                taxOn = true;
+            var year = d3.select("#yearSelect").node().value;
+            console.log(year)
 
-            } else {
+            drawPie.updateYear(year, SPEED);
 
-                taxOn = false;
+        });
 
-            }
 
-            drawMap.update(SPEED);
-            drawPie.update(SPEED);
-            drawLine.update(SPEED);
+        d3v5.select("#divideButton").on("click", function() {
+            drawPie.divide(SPEED*2)
+        });
 
-        }
+        d3v5.select("#unDivideButton").on("click", function() {
+            drawPie.unDivide(SPEED)
+        });
+
+
+
+
+
 
 
 
@@ -125,15 +128,58 @@ window.onload = function() {
 function drawPie(dataset) {
 // based on https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c/22619fa86de2045b6eeb4060e747c5076569ec47
 
-    drawPie.update = update;
 
+    let margin = {
+        left: 40,
+        right: 40,
+        top: 20,
+        bottom: 20
+    };
+
+    let width = pieW - margin.left - margin.right;
+    let height = pieH - margin.top - margin.bottom;
+    let peopleH = 64;
+
+    let divided = false;
+
+
+    let pieRadius = (pieH * 0.7 - margin.top - margin.left) / 2;
+
+    drawPie.updateYear = updateYear;
+    drawPie.updateCountry = updateCountry;
+    drawPie.divide = divide;
+    drawPie.unDivide = unDivide;
 
 
     let dataHere = dataset;
     let currentData;
+    let currentCountry;
+
+
 
 
     let svg = d3v5.select("#pieChart");
+
+
+    svg.append("g")
+        .attr("class", "people")
+        .attr("transform", "translate(" + margin.left + "," + (margin.top + height - peopleH) + ")");
+
+
+
+    let people = svg.select(".people")
+
+    for (i = 0; i<10; i ++) {
+        people.append('svg:image')
+        .attr('xlink:href', "img/man1.png")
+        .attr("height", peopleH)
+        .attr("x", ( width / 10 * i) + ((width / 10 - peopleH) / 2) )
+        }
+
+
+
+
+
 
     svg.append("text")
         .attr("x", pieW / 2)
@@ -144,9 +190,6 @@ function drawPie(dataset) {
 
     svg.attr("width", pieW)
         .attr("height", pieH)
-        .append("g")
-        .attr("class", "pie")
-        .attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + margin.top) + ")");
 
     let pieColor = d3v5.scaleLinear()
         .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
@@ -184,27 +227,13 @@ function drawPie(dataset) {
     svg.call(tip);
 
 
-
-    update(0);
-
+    function updateYear(year, speed) {
 
 
+        currentData = []
+        currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income pre tax" && d.Year == year);
 
 
-
-
-    function update(speed) {
-
-
-        if (taxOn){
-
-            currentData = dataHere.filter(d => d.ISO == currentCountry && d.Year == currentYear && d.Variable == "income post tax");
-
-        } else {
-
-            currentData = dataHere.filter(d => d.ISO == currentCountry && d.Year == currentYear && d.Variable == "income pre tax");
-
-        }
         // Sort the data by its percentiles.
         currentData.sort(function(a, b) {
 
@@ -212,24 +241,36 @@ function drawPie(dataset) {
 
         });
 
+        console.log("data in de updateYear van de pie:")
+        console.log(currentData);
+
         let path;
 
-        if (currentData.length == 0) {
-            path = svg.select(".pie").selectAll("path")
-                .data(pie([]));
+        if (currentData.length != 10) {
+            return;
         } else {
-            path = svg.select(".pie").selectAll("path")
+            path = svg.selectAll("path")
                 .data(pie(currentData));
         }
 
 
         path.exit().remove();
 
-        path.transition().duration(speed).attrTween("d", arcTween);
+        if (divided) {
+            path.transition().duration(2 * speed).attrTween("d", arcTween);
+        } else {
+            path.transition().duration(speed).attrTween("d", arcTween);
+        }
 
-        path.enter().append("path")
+
+        path.enter()
+            .append("g")
+            .attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + margin.top) + ")")
+            .attr("class", function(d, i) {
+                return "slice";
+            })
+            .append("path")
             .attr("fill", function(d, i) {
-                console.log(d);
                 return pieColor(i);
             })
             .attr("d", arc)
@@ -240,17 +281,174 @@ function drawPie(dataset) {
             .on('mouseout', tip.hide);
 
 
+
+        if (divided) {
+            divide(2 * speed);
+        }
+
+
+
+
+    }
+
+    function updateCountry(country, speed) {
+
+
+
+
+        currentCountry = country;
+
+        let countryData = dataHere.filter(d => d.ISO == country && d.Variable == "income pre tax");
+
+        console.log("we zitten in updateCountry")
+        console.log(country);
+        console.log(countryData)
+        let years = new Set();
+
+        for (j = 0; j < countryData.length; j++) {
+            years.add(countryData[j].Year);
+        };
+
+        years = Array.from(years);
+        years.sort();
+
+        let yearOptions = d3v5.select("#yearSelect").selectAll("option").data(years.reverse());
+
+        yearOptions.enter().append("option")
+            .merge(yearOptions)
+            .property("selected", d => d === currentYear)
+            .text(d => d);
+
+        yearOptions.exit().remove();
+
+
+
+        let newestYear = d3v5.max(years);
+
+        currentData = []
+        currentData = countryData.filter(d => d.Year == newestYear);
+
+
+
+
+
+        // Sort the data by its percentiles.
+        currentData.sort(function(a, b) {
+
+            return a.Percentile.localeCompare(b.Percentile);
+
+        });
+
+        console.log("data in de update van de pie:")
+        console.log(currentData);
+
+        let path;
+
+        if (currentData.length != 10) {
+            return;
+        } else {
+            path = svg.selectAll("path")
+                .data(pie(currentData));
+        }
+
+
+        path.exit().remove();
+
+
+        if (divided) {
+            path.transition().duration(2 * speed).attrTween("d", arcTween);
+        } else {
+            path.transition().duration(speed).attrTween("d", arcTween);
+        }
+
+
+
+        path.enter()
+            .append("g")
+            .attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + margin.top) + ")")
+            .attr("class", function(d, i) {
+                return "slice";
+            })
+            .append("path")
+            .attr("fill", function(d, i) {
+                return pieColor(i);
+            })
+            .attr("d", arc)
+            .attr("stroke", "#404040")
+            .attr("stroke-width", "1px")
+            .each(function(d) { this._current = d; })
+            .on('mouseover', d => tip.show(d))
+            .on('mouseout', tip.hide);
+
+
         d3v5.selectAll(".pieTitle")
-            .text(currentCountryName);
+            .text(currentData[0].Country);
+
+
+        if (divided) {
+            divide(2 * speed);
+        }
+
 
 
     };
+
+
+    function divide(speed) {
+        console.log("begin divide functie");
+
+
+        slices = svg.selectAll(".slice").data(pie(currentData));
+        slices.transition().duration(1000);
+
+        slices.transition(speed).attr("transform", function(d, i) {
+
+
+
+            var rotate = 360 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180;
+
+            // if (i == 9) {
+            //     rotate = 90 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180
+            // }
+
+
+            x =  margin.left + ( width / 10 * i) + ((width / 10) / 2)
+
+
+            // let x = margin.left + ( (width / 100) * i * i) + (width / 10)  ;
+            let y = margin.top + height - peopleH - 8;
+
+            return "translate(" + x + "," + y + ") rotate(" + rotate + ")";
+
+
+
+        }).duration(speed);
+
+        divided = true;
+    }
+
+    function unDivide(speed) {
+
+
+        console.log("aan het UNdividen")
+
+        slices = svg.selectAll(".slice");
+
+        slices.transition().attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + margin.top) + ")").duration(speed);
+
+        divided = false;
+
+    }
+
 };
 
 
 
 
 function drawLine(dataset) {
+
+    let currentCountry;
+    let currentCountryName;
 
     let marginHere = {
         left: 40,
@@ -367,10 +565,13 @@ function drawLine(dataset) {
 
 
 
-    update(0)
+    update("NLD", 0)
 
 
-    function update(speed) {
+    function update(country, speed) {
+        console.log("in de update van de lijn")
+
+        currentCountry = country;
 
         let t = d3v5.transition().duration(speed);
 
@@ -418,12 +619,10 @@ function drawLine(dataset) {
         svg.selectAll(".y-axis").transition(t).call(yAxis);
         svg.selectAll(".x-axis").transition(t).call(xAxis);
 
-        // Title.
-        if (currentData.length > 0) {
-            title.transition(t).text("Income shares over time in " + currentCountryName);
-        } else {
-            title.transition(t).text();
-        }
+
+
+        title.transition(t).text("Income shares over time in " + currentData[0].Country);
+
 
 
         // Dots.
@@ -458,14 +657,27 @@ function drawLine(dataset) {
 
 function drawMap(dataset) {
 
+    let margin = {
+        left: 20,
+        right: 20,
+        top: 40,
+        bottom: 20
+    };
+
 
     // The year determines what year the map shows initially.
 
-    drawMap.update = update;
+
 
 
     var dataHere = dataset;
-    var currentData;
+
+
+
+
+    let currentData;
+
+
 
 
     // Help from http://jsbin.com/kuvojohapi/1/edit?html,output.
@@ -485,12 +697,23 @@ function drawMap(dataset) {
     let map = new Datamap({
         element: document.getElementById("mapContainer"),
         done: function(datamap) {
-            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, data) {
+            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geo, data) {
 
-                currentCountry = geography.id;
-                currentCountryName = geography.properties.name;
-                drawPie.update(SPEED);
-                drawLine.update(SPEED);
+                if (Object.keys(iso2Countries).includes(geo.id)) {
+
+                    d3v5.select("#countrySelect").selectAll("option")
+                        .property("selected", d => d === iso2Countries[geo.id])
+                        .text(d => d);
+
+
+
+
+
+
+                    drawPie.updateCountry(geo.id, SPEED);
+                    drawLine.update(geo.id, SPEED);
+                }
+
 
             });
         },
@@ -595,36 +818,44 @@ function drawMap(dataset) {
 
     function update(speed) {
 
+
+
+        let newestData = []
+
+        // only select the newest data
+
         colormap = {}
 
-        if (taxOn) {
+        currentData = []
 
-            currentData = dataHere.filter(d => d.Variable == "income post tax" && d.Year == currentYear)
-
-        } else {
-
-            currentData = dataHere.filter(d => d.Variable == "income pre tax" && d.Year == currentYear)
-        }
+        Object.keys(iso2Countries).forEach(function(iso) {
 
 
-        if (taxOn) {
+            let countryData = dataHere.filter(d => d.ISO == iso && d.Variable == "income pre tax");
+            let newestYear = d3v5.max(countryData, d => d.Year);
+            newestCountryData = countryData.filter(d => d.Year == newestYear);
+            if (newestCountryData[0]){
+                currentData.push(countryData.filter(d => d.Year == newestYear)[0]);
+            }
 
-            svg.selectAll(".colorAxisTitle")
-                .text("income share");
+        });
 
-            // Title.
-            svg.selectAll(".mapTitle")
-                .text("income share of top 10% after taxes");
 
-        } else {
 
-            svg.selectAll(".colorAxisTitle")
-                .text("income share");
+        console.log(currentData)
 
-            // Title.
-            svg.selectAll(".mapTitle")
-                .text("income share of top 10% before taxes");
-        }
+
+
+
+
+
+        svg.selectAll(".colorAxisTitle")
+            .text("income share");
+
+        // Title.
+        svg.selectAll(".mapTitle")
+            .text("income share of top 10% before taxes");
+
 
 
 
@@ -635,10 +866,7 @@ function drawMap(dataset) {
         let incomeMin = d3v5.min(currentData, d => d.Value);
 
 
-        if (incomeMin == incomeMax) {
-            incomeMax *= 1.1;
-            incomeMin *= 0.9;
-        }
+
 
 
         colorScale.domain([incomeMin, incomeMax]);
