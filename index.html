@@ -36,7 +36,8 @@
 <body>
     <script src="inequality.js" charset="utf-8"></script>
 
-    <div class="container">
+    <div class="jumbotron text-center">
+
         <h1>Inequality</h1>
 
         <p>
@@ -52,47 +53,78 @@
             Source: World Inequality Database
         </p>
 
+    </div>
 
 
-        <div id="mapContainer"></div>
+    <div class="container">
+        <div class="row">
 
-        <label class="dropdown">
-            Click a country on the map or select one here:
-            <select id="countrySelect"></select>
-        </label>
+            <div class="col-sm">
+
+                <div id="mapContainer">
 
 
+                </div>
 
-        <div id="pieContainer">
-
-            <label class="dropdown">
-                Select year:
-                <select id="yearSelect"></select>
-            </label>
-
-            <label class="button">
-                <button id="divideButton" type="button">Divide the pie</button>
-            </label>
-
-            <label class="button">
-                <button id="unDivideButton" type="button">Put it back together</button>
-            </label>
-
-            <div id="pieChartContainer">
-                <svg id="pieChart"></svg>
             </div>
 
         </div>
 
+        <div class="row">
 
-        <div id="lineChartContainer">
-            <svg id="lineChart"></svg>
+            <div class="col-2">
+
+                <label class="dropdown">
+                    Click a country on the map or select one here:
+                    <select id="countrySelect"></select>
+                </label>
+
+                <label class="dropdown">
+                    Select year:
+                    <select id="yearSelect"></select>
+                </label>
+
+                <label class="button">
+                    <button id="divideButton" type="button">Divide the pie</button>
+                </label>
+
+                <label class="button">
+                    <button id="unDivideButton" type="button">Put it back together</button>
+                </label>
+
+            </div>
+
+
+            <div class="col-10" id="pieChartContainer">
+
+                <svg id="pieChart">
+                </svg>
+
+
+            </div>
+
+
         </div>
+
+        <div class="row">
+
+
+
+            <div class="col-sm" id="lineChartContainer">
+
+                <svg id="lineChart">
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
 
 <!--
         <div id='tooltip' style='position:absolute;background-color:lightgray;padding:5px'></div>
          -->
-    </div>
+
 
 
     <footer>

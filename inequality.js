@@ -1,5 +1,5 @@
-const mapW = 800;
-const mapH = 400;
+const mapW = 1000;
+const mapH = 500;
 
 
 const COLORLEGENDHEIGHT = .5 * mapH;
@@ -173,6 +173,7 @@ function drawPie(dataset) {
         people.append('svg:image')
         .attr('xlink:href', "img/man1.png")
         .attr("height", peopleH)
+        .attr("width", peopleH)
         .attr("x", ( width / 10 * i) + ((width / 10 - peopleH) / 2) )
         }
 
