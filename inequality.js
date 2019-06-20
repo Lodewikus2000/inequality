@@ -29,7 +29,7 @@ var currentYear = 2015;
 
 
 
-const SPEED = 500;
+const SPEED = 2000;
 
 INCOMESCALECOLORS = ["#fde0dd", "#c51b8a"];
 INCOMEGROUPCOLORS = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
@@ -136,7 +136,7 @@ window.onload = function() {
                 pieCut = false;
                 d3v5.select(this).text("Cut the pie");
             } else {
-                drawPie.divide(SPEED*2);
+                drawPie.divide(SPEED);
                 pieCut = true;
                 d3v5.select(this).text("Put it back");
             }
@@ -717,7 +717,7 @@ function drawMap(dataset) {
                         .text(d => d);
 
 
-                    var elmnt = document.getElementById("pieChart");
+                    var elmnt = document.getElementById("pieStory");
                     elmnt.scrollIntoView();
 
                     drawPie.updateCountry(geo.id, SPEED);

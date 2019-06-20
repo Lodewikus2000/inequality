@@ -17,11 +17,19 @@ body {
 }
 
 .row {
-  min-width: 1000px;
+  min-width: 1032px;
   width: auto;
+  margin: 16px;
+
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 2px;
+  border-color: #A9A9A9;
 }
 
-
+/* div[class*="col"] {
+  background: #e2deed;
+} */
 
 #lorenz .line {
     fill: none;
@@ -29,7 +37,9 @@ body {
     stroke-width: 3;
 }
 
+.row {
 
+}
 
 h1 {
   color: #66c2a5;

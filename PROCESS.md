@@ -56,3 +56,6 @@ Obtained and processed data for top 1 percent.
 
 # Day 13
 Added a dropdown menu to select what the map should display (top 1, top 10, or bottom 10).
+Added a lorenz curve.
+Worked on the overal layout.
+Merged the 2 buttons to divide and undivide the pie into one toggle button.
