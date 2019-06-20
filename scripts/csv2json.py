@@ -10,9 +10,9 @@ import pycountry_convert as convert
 from collections import defaultdict
 
 
-INPUT_CSV = ["..\\data\\income_post_tax.csv", "..\\data\\income_pre_tax.csv", "..\\data\\gini_post_tax.csv"]
-LABELS = ["income post tax", "income pre tax", "gini post tax"]
-OUTPUT_JSON = ["..\\data\\income_post_tax.json", "..\\data\\income_pre_tax.json", "..\\data\\gini_post_tax.json"]
+INPUT_CSV = ["..\\data\\income_pre_tax.csv", "..\\data\\gini_post_tax.csv", "..\\data\\income_pre_p99p100.csv"]
+LABELS = ["income pre tax", "gini post tax", "income pre tax"]
+OUTPUT_JSON = ["..\\data\\income_pre_tax.json", "..\\data\\gini_post_tax.json", "..\\data\\income_pre_p99p100.json"]
 dataframes = []
 
 
@@ -54,7 +54,8 @@ if __name__ == '__main__':
 
 
 
-
+        if i == 2:
+            print(df)
 
 
 
@@ -72,19 +73,20 @@ if __name__ == '__main__':
 
 
 
-    # remove all combination of country + year if not all data for all groups is available
-    for label in LABELS[:2]:
-        for country in total.ISO.unique():
-            for year in total.Year.unique():
-                selection = total.loc[(total["ISO"] == country) & (total["Year"] == year) & (total["Variable"] == label)]
-                if country == "CHL" and year == 2004:
-                    print(selection)
-                if len(selection.index) == 0:
-                    pass
-                elif len(selection.index) != 10:
-                    print(selection)
-                    print(f"dropped combination {country} {year} {label}")
-                    total.drop(total[(total.ISO == country) & (total.Year == year) & (total.Variable == label)].index, inplace=True)
+    # remove country + year if data is not available for all 10 income groups
+
+    for country in total.ISO.unique():
+        for year in total.Year.unique():
+            selection = total.loc[(total["ISO"] == country) & (total["Year"] == year) & (total["Variable"] == LABELS[0])]
+
+            if len(selection.index) == 0:
+                pass
+            elif len(selection.index) != 11:
+                print(selection)
+                print("-----------------")
+                print(f"dropped combination {country} {year} {LABELS[0]}")
+                print("-----------------")
+                total.drop(total[(total.ISO == country) & (total.Year == year) & (total.Variable == LABELS[0])].index, inplace=True)
 
 
 

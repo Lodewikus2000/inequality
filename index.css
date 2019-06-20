@@ -1,8 +1,35 @@
+html {
+  scroll-behavior: smooth;
+}
+
+
 body {
   font-family: helvetica, sans-serif;
   background-color: #F8F8F8	;
   font-size: .8em;
+  min-width: 1064px;
+  width: auto;
 }
+
+.container {
+  min-width: 1064px;
+  width: auto;
+}
+
+.row {
+  min-width: 1000px;
+  width: auto;
+}
+
+
+
+#lorenz .line {
+    fill: none;
+    stroke: #f0027f;
+    stroke-width: 3;
+}
+
+
 
 h1 {
   color: #66c2a5;
@@ -101,13 +128,15 @@ svg {
 
 
 .legendText {
-  font-size: .8em;
+    font-size: .8em;
 }
 
 
 
 
-
+.title {
+  font: 12px sans-serif;
+}
 
 
 
@@ -130,4 +159,33 @@ form {
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   border-radius: 2px;
+}
+
+
+
+
+
+
+
+.datamaps-hoverover {
+  display: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+
+/* The next 2 are copied from the datamaps tooltip for uniformity. */
+#tooltip {
+  position: absolute;
+  visibility: hidden;
+  z-index: 10001;
+  padding: 4px; border-radius: 1px;
+  background-color: #FFF;
+  box-shadow: 1px 1px 5px #CCC;
+  font-size: 12px;
+  border: 1px solid #CCC;
+}
+
+#tooltip hr {
+  border:1px dotted #CCC;
 }

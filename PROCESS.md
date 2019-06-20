@@ -32,7 +32,27 @@ I'm thinking it would be better to not let the year selection have any effect on
 
 
 # Day 8
+Made the line chart's x-axis update when a different country is selected, because the time period for which data is available differs per country.
 
 
 
 # Day 9
+
+
+
+# Weekend
+The pie chart can now be divided over 10 people, representing ten income groups.
+The map now only displays the newest data per country.
+
+# Day 10
+Implemented bootstrap.
+
+# Day 11
+
+
+
+# Day 12
+Obtained and processed data for top 1 percent.
+
+# Day 13
+Added a dropdown menu to select what the map should display (top 1, top 10, or bottom 10).

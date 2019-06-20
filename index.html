@@ -19,8 +19,6 @@
       window.d3 = null;
     </script>
 
-    <!-- import tip -->
-    <script src="d3/d3-tip.js"></script>
 
 
     <!-- Import D3 V3 and TopoJSON -->
@@ -35,6 +33,9 @@
 
 <body>
     <script src="inequality.js" charset="utf-8"></script>
+
+    <div id="tooltip">
+    </div>
 
     <div class="jumbotron text-center">
 
@@ -57,74 +58,108 @@
 
 
     <div class="container">
+
+        <div class="row" id="mapStory">
+
+            <div class="col-sm">
+
+                <p> This world map shows how rich (or poor) the richest (or poorest) group of people in a country is.
+                </p>
+
+                <label class="dropdown">
+                    Select which group the map should display:
+                    <select id="mapSelect">
+                    </select>
+                </label>
+
+            </div>
+
+        </div>
+
+
         <div class="row">
 
             <div class="col-sm">
 
                 <div id="mapContainer">
-
-
                 </div>
 
             </div>
 
         </div>
 
-        <div class="row">
+        <div class="row" id="pieStory">
 
-            <div class="col-2">
+            <div class="col-4">
 
-                <label class="dropdown">
-                    Click a country on the map or select one here:
-                    <select id="countrySelect"></select>
-                </label>
-
-                <label class="dropdown">
-                    Select year:
-                    <select id="yearSelect"></select>
-                </label>
-
-                <label class="button">
-                    <button id="divideButton" type="button">Divide the pie</button>
-                </label>
-
-                <label class="button">
-                    <button id="unDivideButton" type="button">Put it back together</button>
-                </label>
-
+                <p>
+                    This pie chart shows how much
+                </p>
             </div>
 
+            <div class="col-4">
 
-            <div class="col-10" id="pieChartContainer">
+                
+                    <label class="dropdown">
+                        Click a country on the map or select one here:
+                        <select id="countrySelect"></select>
+                    </label>
 
-                <svg id="pieChart">
-                </svg>
+                    <label class="dropdown">
+                        Select year:
+                        <select id="yearSelect"></select>
+                    </label>
+
+                    <label class="button">
+                        <button id="divideButton" type="button">Cut the pie</button>
+                    </label>
 
 
             </div>
-
 
         </div>
 
+
+
+        <div class="row">
+            <div class="col-sm" id="pieChartContainer">
+
+                <svg id="pieChart"></svg>
+
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-2" id="lorenzStory">
+                <p>
+                    This is how a lorenz curve works:
+                </p>
+            </div>
+            <div class="col-10" id="lorenzContainer">
+                <svg id="lorenz"></svg>
+            </div>
+        </div>
+
+
         <div class="row">
 
+            <div class="col-2" id="lineStory">
+                <p>
+                    Little textje about the linegraph:
+                </p>
+            </div>
 
-
-            <div class="col-sm" id="lineChartContainer">
-
+            <div class="col-10" id="lineChartContainer">
                 <svg id="lineChart">
                 </svg>
-
             </div>
 
         </div>
 
     </div>
-
-<!--
-        <div id='tooltip' style='position:absolute;background-color:lightgray;padding:5px'></div>
-         -->
-
 
 
     <footer>
