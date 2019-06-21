@@ -1,20 +1,4 @@
-const mapW = 1000;
-const mapH = 500;
 
-
-const COLORLEGENDHEIGHT = .5 * mapH;
-const COLORLEGENDWIDTH = 24;
-
-
-const pieW = 1000;
-const pieH = 300;
-
-
-const lineW = 800;
-const lineH = 400;
-
-const lorenzW = 400;
-const lorenzH = 400;
 
 var defaultCountry = "NLD";
 
@@ -26,7 +10,7 @@ var iso2Countries = {};
 var currentYear = 2015;
 
 
-const SPEED = 2000;
+const SPEED = 1500;
 
 INCOMESCALECOLORS = ["#fde0dd", "#c51b8a"];
 INCOMEGROUPCOLORS = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
@@ -43,7 +27,7 @@ window.onload = function() {
         let allData = response[0]
 
 
-        let incomeData = allData.filter(d => d.Variable == "income pre tax");
+        let incomeData = allData.filter(d => d.Variable == "income share" || d.Variable == "average income");
 
         // Make a list of all the countries for which income data is available.
         for (j = 0; j < incomeData.length; j++) {

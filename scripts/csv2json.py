@@ -10,9 +10,9 @@ import pycountry_convert as convert
 from collections import defaultdict
 
 
-INPUT_CSV = ["..\\data\\income_pre_tax.csv", "..\\data\\gini_post_tax.csv", "..\\data\\income_pre_p99p100.csv"]
-LABELS = ["income pre tax", "gini post tax", "income pre tax"]
-OUTPUT_JSON = ["..\\data\\income_pre_tax.json", "..\\data\\gini_post_tax.json", "..\\data\\income_pre_p99p100.json"]
+INPUT_CSV = ["..\\data\\income_pre_tax.csv", "..\\data\\gini_post_tax.csv", "..\\data\\income_pre_p99p100.csv", "..\\data\\average_income.csv"]
+LABELS = ["income share", "gini post tax", "income share", "average income"]
+OUTPUT_JSON = ["..\\data\\income_pre_tax.json", "..\\data\\gini_post_tax.json", "..\\data\\income_pre_p99p100.json", "..\\data\\average_income.json"]
 dataframes = []
 
 

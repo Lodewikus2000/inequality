@@ -1,5 +1,12 @@
 function drawMap(dataset) {
 
+    let mapW = 1000;
+    let mapH = 500;
+
+
+    let COLORLEGENDHEIGHT = .5 * mapH;
+    let COLORLEGENDWIDTH = 24;
+
     let marginHere = {
         left: 20,
         right: 20,
@@ -77,7 +84,7 @@ function drawMap(dataset) {
                     ].join('');
                 } else {
                     let data = currentData.filter(d => d.ISO == geo.id)[0];
-                    string = '<div class="hoverinfo"><strong>' + geo.properties.name + "<br>" + Math.round(d.numberOfThings * 100) + "% in " + data.Year + '</strong></div>';
+                    string = '<div class="hoverinfo"><strong>' + geo.properties.name + "<br>" + (Math.round(d.numberOfThings * 10000)/100) + "% in " + data.Year + '</strong></div>';
                     return string;
                 }
             }
@@ -169,7 +176,7 @@ function drawMap(dataset) {
         Object.keys(iso2Countries).forEach(function(iso) {
 
 
-            let countryData = dataHere.filter(d => d.ISO == iso && d.Percentile == percentile);
+            let countryData = dataHere.filter(d => d.ISO == iso && d.Percentile == percentile && d.Variable == "income share");
             let newestYear = d3v5.max(countryData, d => d.Year);
             newestCountryData = countryData.filter(d => d.Year == newestYear);
             if (newestCountryData[0]){

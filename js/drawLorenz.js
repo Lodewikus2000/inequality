@@ -1,5 +1,8 @@
 function drawLorenz(dataset) {
 
+    let lorenzW = 400;
+    let lorenzH = 400;
+
     drawLorenz.updateCountry = updateCountry;
     drawLorenz.updateYear = updateYear;
 
@@ -98,7 +101,7 @@ function drawLorenz(dataset) {
 
         currentCountry = country;
         // The top 1 percent is included in the top 10 percent, so we filter them out.
-        currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income pre tax" && d.Year == year && d.Percentile != "p99p100");
+        currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income share" && d.Year == year && d.Percentile != "p99p100");
 
 
         // Sort the data by its percentiles.
@@ -152,7 +155,7 @@ function drawLorenz(dataset) {
     function updateYear(year, speed) {
             currentYear = year;
 
-            currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income pre tax" && d.Year == currentYear && d.Percentile != "p99p100");
+            currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income share" && d.Year == currentYear && d.Percentile != "p99p100");
 
 
             // Sort the data by its percentiles.

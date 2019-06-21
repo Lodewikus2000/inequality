@@ -5,7 +5,8 @@ html {
 
 body {
   font-family: helvetica, sans-serif;
-  background-color: #F8F8F8	;
+  background-image: linear-gradient(#fffb96, #ff71ce);
+  /* background-color: #F8F8F8	; */
   font-size: .8em;
   min-width: 1064px;
   width: auto;
@@ -19,18 +20,17 @@ body {
 .row {
   min-width: 1032px;
   width: auto;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
   margin-left: auto;
   margin-right: auto;
 
-  border-style: solid;
-  border-color: #A9A9A9;
+  background-color: #F8F8F8;
 
 
-  border: 1px solid;
+  /* border: 1px solid; */
   padding: 10px;
-  box-shadow: 10px 10px;
+  box-shadow: 10px 10px #404040;
 }
 
 /* div[class*="col"] {
@@ -48,7 +48,7 @@ body {
 }
 
 h1 {
-  color: #66c2a5;
+  color: #b967ff;
 }
 
 

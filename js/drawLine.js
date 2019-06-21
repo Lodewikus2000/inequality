@@ -1,5 +1,9 @@
 function drawLine(dataset) {
 
+    let lineW = 600;
+    let lineH = 400;
+
+
     let currentCountry;
     let currentCountryName;
 
@@ -118,7 +122,7 @@ function drawLine(dataset) {
 
         let t = d3v5.transition().duration(speed);
 
-        currentData = dataHere.filter(d => d.Variable == "income pre tax" && d.ISO == currentCountry)
+        currentData = dataHere.filter(d => d.Variable == "income share" && d.ISO == currentCountry)
 
 
         let maxValue = d3v5.max(currentData, d => d.Value);

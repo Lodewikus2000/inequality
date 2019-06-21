@@ -1,4 +1,11 @@
 function drawPie(dataset) {
+
+    let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
+
+    let pieW = 1000;
+    let pieH = 400;
+
+    let textHeight = 20;
 // based on https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c/22619fa86de2045b6eeb4060e747c5076569ec47
 
     let piecesNumber = 10;
@@ -17,7 +24,7 @@ function drawPie(dataset) {
     let divided = false;
 
 
-    let pieRadius = (pieH * 0.7 - marginHere.top - marginHere.left) / 2;
+    let pieRadius = (pieH * 0.6 - marginHere.top - marginHere.left) / 2;
 
     drawPie.updateYear = updateYear;
     drawPie.updateCountry = updateCountry;
@@ -37,17 +44,49 @@ function drawPie(dataset) {
 
     svg.append("g")
         .attr("class", "people")
-        .attr("transform", "translate(" + marginHere.left + "," + (marginHere.top + height - peopleH) + ")");
+        .attr("transform", "translate(" + marginHere.left + "," + (marginHere.top + height - peopleH - textHeight) + ")");
 
 
-    let people = svg.select(".people")
+    svg.append("g")
+        .attr("class", "groupText")
+        .attr("transform", "translate(" + marginHere.left + "," + (marginHere.top + height - textHeight / 2) + ")");
 
-    for (i = 0; i < 10; i ++) {
+
+    let people = svg.select(".people");
+
+    let groupText = svg.select(".groupText");
+
+    for (i = 0; i < piecesNumber; i ++) {
         people.append('svg:image')
-        .attr('xlink:href', "img/man1.png")
-        .attr("height", peopleH)
-        .attr("width", peopleH)
-        .attr("x", ( (width / 10 * i) + ( ( (width / 10) -peopleH )  * (i / 10) )   ))
+            .data([percentiles[i]])
+            .attr('xlink:href', "img/man1.png")
+            .attr("height", peopleH)
+            .attr("width", peopleH)
+            .attr("x", ( (width / piecesNumber * i) + ( ( (width / piecesNumber) -peopleH )  * (i / piecesNumber) )   ))
+            .on("mouseover", function(d){
+
+                let incomeData = currentData.filter(x => x.Percentile == d && x.Variable == "average income")[0];
+                let average = incomeData.Value.toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+                let shareData = currentData.filter(x => x.Percentile == d && x.Variable == "income share")[0];
+
+
+
+                tooltip.html("share: " + (Math.round(shareData.Value * 10000) / 100) + "% <br> average income (local currency): " + average );
+                tooltip.style("visibility", "visible");
+            })
+            .on("mousemove", function(){
+                tooltip.style("top", (event.pageY + 30)+"px").style("left",(event.pageX)+"px");
+            })
+            .on("mouseout", function(){
+                tooltip.style("visibility", "hidden");
+            });
+
+        groupText.append("text")
+            .attr("id", "text" + i)
+            .attr("x", peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH) )
+            .style("text-anchor", "middle")
+            .text(i * 10 + " to " + (i + 1) * 10 + " % ");
         }
 
 
@@ -89,25 +128,21 @@ function drawPie(dataset) {
 
 
         // The top 1 percent is included in the top 10 percent, so we filter them out.
-        currentData = dataHere.filter(d => d.ISO == currentCountry && d.Variable == "income pre tax" && d.Year == year && d.Percentile != "p99p100");
+        currentData = dataHere.filter(d => d.ISO == currentCountry &&  d.Year == year && d.Percentile != "p99p100");
 
 
         // Sort the data by its percentiles.
         currentData.sort(function(a, b) {
-
             return a.Percentile.localeCompare(b.Percentile);
-
         });
 
 
-        let path;
 
-        if (currentData.length != 10) {
-            return;
-        } else {
-            path = svg.selectAll("path")
-                .data(pie(currentData));
-        }
+        shares = currentData.filter(d => d.Variable == "income share")
+
+
+        let path = svg.selectAll("path")
+            .data(pie(shares));
 
 
         path.exit().remove();
@@ -150,7 +185,7 @@ function drawPie(dataset) {
         currentCountry = country;
 
         // Filter out the top 1
-        let countryData = dataHere.filter(d => d.ISO == country && d.Variable == "income pre tax" && d.Percentile != "p99p100");
+        let countryData = dataHere.filter(d => d.ISO == country && d.Percentile != "p99p100");
 
 
         let years = new Set();
@@ -174,8 +209,10 @@ function drawPie(dataset) {
 
         let newestYear = d3v5.max(years);
 
-        currentData = []
+
         currentData = countryData.filter(d => d.Year == newestYear);
+
+
 
 
         // Sort the data by its percentiles.
@@ -185,16 +222,11 @@ function drawPie(dataset) {
 
         });
 
+        shares = currentData.filter(d => d.Variable == "income share")
 
+        let path = svg.selectAll("path")
+            .data(pie(shares));
 
-        let path;
-
-        if (currentData.length != 10) {
-            return;
-        } else {
-            path = svg.selectAll("path")
-                .data(pie(currentData));
-        }
 
 
         path.exit().remove();
@@ -222,14 +254,20 @@ function drawPie(dataset) {
             .attr("stroke-width", "1px")
             .each(function(d) { this._current = d; })
             .on("mouseover", function(d){
-                tooltip.text(d.data.Value)
-                return tooltip.style("visibility", "visible");
+
+
+                let data = currentData.filter(x => x.Percentile == d.data.Percentile && x.Variable == "average income")[0];
+                let average = data.Value.toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+                tooltip.html("share: " + (Math.round(d.data.Value * 10000) / 100) + "% <br> average income (local currency): " + average );
+
+                tooltip.style("visibility", "visible");
             })
             .on("mousemove", function(){
-                return tooltip.style("top", (event.pageY + 30)+"px").style("left",(event.pageX)+"px");
+                tooltip.style("top", (event.pageY + 30)+"px").style("left",(event.pageX)+"px");
             })
             .on("mouseout", function(){
-                return tooltip.style("visibility", "hidden");
+                tooltip.style("visibility", "hidden");
             });
 
 
@@ -248,25 +286,26 @@ function drawPie(dataset) {
     function divide(speed) {
         console.log("begin divide functie");
 
+        shares = currentData.filter(d => d.Variable == "income share");
 
-        slices = svg.selectAll(".slice").data(pie(currentData));
+        slices = svg.selectAll(".slice").data(pie(shares));
 
         slices.transition().duration(speed).attr("transform", function(d, i) {
 
 
 
-            var rotate = 360 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180;
+            let rotate = 360 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180;
 
             // if (i == 9) {
             //     rotate = 90 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180
             // }
 
-            x = marginHere.left + peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH)
+            let x = marginHere.left + peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH)
             // x =  marginHere.left + ( width / 10 * i) + ((width / 10) / 2)
 
 
             // let x = marginHere.left + ( (width / 100) * i * i) + (width / 10)  ;
-            let y = marginHere.top + height - peopleH - 8;
+            let y = marginHere.top + height - peopleH - textHeight - 8;
 
             return "translate(" + x + "," + y + ") rotate(" + rotate + ")";
 
