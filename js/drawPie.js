@@ -66,7 +66,7 @@ function drawPie(dataset) {
             .on("mouseover", function(d){
 
                 let incomeData = currentData.filter(x => x.Percentile == d && x.Variable == "average income")[0];
-                let average = incomeData.Value.toLocaleString("en-US", { minimumFractionDigits: 2 });
+                let average = incomeData.Value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
                 let shareData = currentData.filter(x => x.Percentile == d && x.Variable == "income share")[0];
 
