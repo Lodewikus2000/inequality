@@ -37,7 +37,7 @@ Made the line chart's x-axis update when a different country is selected, becaus
 
 
 # Day 9
-
+Met with Jasper, who advised to add data for the top 1 percent and have the option to show that in the map. A Lorenz curve was also suggested.
 
 
 # Weekend
@@ -48,7 +48,7 @@ The map now only displays the newest data per country.
 Implemented bootstrap.
 
 # Day 11
-
+Out of office.
 
 
 # Day 12
@@ -57,5 +57,10 @@ Obtained and processed data for top 1 percent.
 # Day 13
 Added a dropdown menu to select what the map should display (top 1, top 10, or bottom 10).
 Added a lorenz curve.
-Worked on the overal layout.
+Worked on the overall layout.
 Merged the 2 buttons to divide and undivide the pie into one toggle button.
+
+# Day 14
+Met with Jasper, his opinion is that most of it is done.
+Added average income data. Hovering over the pie chart or the people in the pie chart now shows the average income for this group.
+It looks like the spacing of the people in the pie chart could be less linear, as the last one or two people need more space.
