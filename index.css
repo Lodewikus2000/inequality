@@ -12,6 +12,13 @@ body {
   width: auto;
 }
 
+#navbar {
+  box-shadow: 10px 10px #505050;
+  background-color: #F8F8F8;
+
+}
+
+
 .container {
   min-width: 1064px;
   width: auto;
@@ -30,7 +37,7 @@ body {
 
   /* border: 1px solid; */
   padding: 10px;
-  box-shadow: 10px 10px #404040;
+  box-shadow: 10px 10px #505050;
 }
 
 /* div[class*="col"] {
@@ -43,9 +50,13 @@ body {
     stroke-width: 3;
 }
 
-.row {
-
+#lorenz .diagonal {
+    fill: none;
+    stroke: #01cdfe;
+    stroke-width: 3;
 }
+
+
 
 h1 {
   color: #b967ff;
@@ -179,14 +190,10 @@ form {
 
 
 
-
-
-
-
-.datamaps-hoverover {
+/* .datamaps-hoverover {
   display: none;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+} */
 
 
 

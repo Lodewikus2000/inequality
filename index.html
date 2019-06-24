@@ -43,32 +43,58 @@
     <div id="tooltip">
     </div>
 
-    <div class="jumbotron jumbotron-fluid text-center">
-        <div class="container">
 
-            <h1>Inequality</h1>
 
-            <p>
-                Leo Schreuders, student ID 5742978, for the course Programmeerproject
-                at UvA, spring 2019.
-            </p>
 
-            <p>
-                description
-            </p>
-
-            <p>
-                Source: World Inequality Database
-            </p>
-
-        </div>
-
-    </div>
 
 
     <div class="container">
 
-        <div class="row" id="mapStory">
+
+        <nav class="navbar sticky-top  navbar-light bg-light" id="navbar">
+
+
+                    <label class="dropdown">
+                        Select a country:
+                        <select id="countrySelect"></select>
+                    </label>
+
+                    <label class="dropdown">
+                        Select a year:
+                        <select id="yearSelect"></select>
+                    </label>
+
+
+        </nav>
+
+
+
+
+        <div class="row">
+            <div class="col-sm">
+                <header>
+
+                    <h1>Inequality</h1>
+
+                    <p>
+                        Leo Schreuders, student ID 5742978, for the course Programmeerproject
+                        at UvA, spring 2019.
+                    </p>
+
+                    <p>
+                        description
+                    </p>
+
+                    <p>
+                        Source: World Inequality Database
+                    </p>
+                </header>
+
+            </div>
+        </div>
+
+
+        <div class="row">
 
             <div class="col-sm">
 
@@ -81,15 +107,6 @@
                     </select>
                 </label>
 
-            </div>
-
-        </div>
-
-
-        <div class="row">
-
-            <div class="col-sm">
-
                 <div id="mapContainer">
                 </div>
 
@@ -97,34 +114,16 @@
 
         </div>
 
-        <nav class="navbar fixed-top navbar-light bg-light" id="navbar">
 
-            <!-- <form class="form-inline"> -->
-
-
-                    <label class="dropdown">
-                        Click a country on the map or select one here:
-                        <select id="countrySelect"></select>
-                    </label>
-
-                    <label class="dropdown">
-                        Select year:
-                        <select id="yearSelect"></select>
-                    </label>
-
-                    <label class="button">
-                        <button id="divideButton" type="button">Cut the pie</button>
-                    </label>
-
-
-            <!-- </form> -->
-
-        </nav>
 
 
 
         <div class="row">
             <div class="col-sm" id="pieChartContainer">
+
+                <label class="button">
+                    <button id="divideButton" type="button">Cut the pie</button>
+                </label>
 
                 <svg id="pieChart"></svg>
 
@@ -161,12 +160,20 @@
 
         </div>
 
+        <div class="row">
+            <div class="col-sm">
+                <footer>
+                    <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+                </footer>
+            </div>
+        </div>
+
     </div>
 
 
-    <footer>
-        <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-    </footer>
+
+
+
 </body>
 
 </html>

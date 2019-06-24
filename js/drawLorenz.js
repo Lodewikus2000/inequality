@@ -84,6 +84,19 @@ function drawLorenz(dataset) {
         })
         .curve(d3v5.curveMonotoneX) ;
 
+
+    // Draw the diagonal:
+
+    let diagonal = [{x: 0, y: 0}, {x: 100, y: 100}];
+
+    svg.selectAll(".diagonal").data([diagonal])
+        .enter().append("path")
+        .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
+        .attr("class", "diagonal")
+        .attr("d", valueLine);
+
+
+
     let title = svg.append("text")
         .attr("x", marginHere.left)
         .attr("y", marginHere.top - 8)
@@ -125,7 +138,7 @@ function drawLorenz(dataset) {
             cumulative.push(point);
         }
 
-        console.log(cumulative)
+
 
 
         let t = d3v5.transition().duration(speed);
