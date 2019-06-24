@@ -3,16 +3,21 @@ function drawLine(dataset) {
     let lineW = 600;
     let lineH = 400;
 
-
-    let currentCountry;
-    let currentCountryName;
-
     let marginHere = {
         left: 40,
         right: 20,
         top: 40,
         bottom: 40
     };
+
+    let width = lineW - marginHere.left - marginHere.right;
+    let height = lineH - marginHere.top - marginHere.bottom;
+
+
+    let currentCountry;
+    let currentCountryName;
+
+
 
     let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
 
@@ -27,7 +32,7 @@ function drawLine(dataset) {
 
     // Scale for x.
     let xScale = d3v5.scaleLinear()
-        .range([0, lineW - marginHere.left - marginHere.right]);
+        .range([0, width]);
 
     // Function for x axis.
     let xAxis = g => g
@@ -39,7 +44,7 @@ function drawLine(dataset) {
     svg.append("g")
         .attr("class", "x-axis")
         .append("text")
-        .attr("x", lineW - marginHere.right - marginHere.left)
+        .attr("x", width)
         .attr("y", 32)
         .style("text-anchor", "end")
         .style("fill", "black")
@@ -48,7 +53,7 @@ function drawLine(dataset) {
 
 
     // Scale for y.
-    let yScale = d3v5.scaleLinear().range([lineH - marginHere.top - marginHere.bottom, 0]);
+    let yScale = d3v5.scaleLinear().range([height, 0]);
 
     // Function for y.
     let yAxis = g => g
@@ -111,6 +116,68 @@ function drawLine(dataset) {
     //     .attr("y", function(d, i) {
     //         return i * legendBoxDistance - (legendBoxSize);
     //     });
+
+    let tooltip = d3v5.select("#tooltip");
+
+    let tooltipLine = svg.append('line');
+
+
+    let tooltipBox = svg.append('rect')
+        .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
+        .attr('width', width)
+        .attr('height', height)
+        .attr('opacity', 0)
+        .on('mousemove', drawTooltip)
+        .on('mouseout', removeTooltip);
+
+
+    function removeTooltip() {
+
+        if (tooltip) tooltip.style('visibility', 'hidden');
+        if (tooltipLine) tooltipLine.attr('stroke', 'none');
+    }
+
+    function drawTooltip() {
+
+        let year = Math.round(xScale.invert(d3v5.mouse(tooltipBox.node())[0]));
+
+
+        let yearData = currentData.filter(d => d.Year == year && d.Percentile != "p99p100")
+
+
+        tooltipLine.attr('stroke', 'black')
+            .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
+            .attr('x1', xScale(year))
+            .attr('x2', xScale(year))
+            .attr('y1', 0)
+            .attr('y2', height);
+
+
+        tooltip
+            .html(function() {
+                let string = "<b>" + year + "</b>";
+                for (i = yearData.length - 1; i >= 0; i--){
+                    string += "<br>" + i * 10 + " to " + (i + 1) * 10 + " %: " + Math.round(yearData[i].Value * 10000) / 100;
+                }
+                return string;
+            })
+            .style("visibility", "visible")
+            .style('display', 'block')
+            .style('left', d3v5.event.pageX + 20 + "px")
+            .style('top', d3v5.event.pageY - 100 + "px")
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,6 +252,9 @@ function drawLine(dataset) {
                 .attr("r", 1);
 
         }
+
+        // This makes it so the lines will not prevent the tooltip from being drawn.
+        tooltipBox.raise();
 
     }
 }

@@ -39,6 +39,7 @@ function drawPie(dataset) {
 
     let tooltip = d3v5.select("#tooltip");
 
+
     let svg = d3v5.select("#pieChart");
 
 
@@ -62,7 +63,7 @@ function drawPie(dataset) {
             .attr('xlink:href', "img/man1.png")
             .attr("height", peopleH)
             .attr("width", peopleH)
-            .attr("x", ( (width / piecesNumber * i) + ( ( (width / piecesNumber) -peopleH )  * (i / piecesNumber) )   ))
+            .attr("x", 0.8 * ( (width / piecesNumber * i) + ( ( (width / piecesNumber) -peopleH )  * (i / piecesNumber) )   )         + 0.2 * ( (width  / ((2**piecesNumber) -1 )   ) * 2**i    )               )
             .on("mouseover", function(d){
 
                 let incomeData = currentData.filter(x => x.Percentile == d && x.Variable == "average income")[0];
@@ -84,7 +85,7 @@ function drawPie(dataset) {
 
         groupText.append("text")
             .attr("id", "text" + i)
-            .attr("x", peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH) )
+            .attr("x", peopleH / 2 + 0.8 * ( (width / piecesNumber * i) + ( ( (width / piecesNumber) -peopleH )  * (i / piecesNumber) )   )         + 0.2 * ( (width  / ((2**piecesNumber) -1 )   ) * 2**i    ) )
             .style("text-anchor", "middle")
             .text(i * 10 + " to " + (i + 1) * 10 + " % ");
         }
@@ -300,7 +301,9 @@ function drawPie(dataset) {
             //     rotate = 90 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180
             // }
 
-            let x = marginHere.left + peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH)
+            // let x = marginHere.left + peopleH / 2 + ( i / piecesNumber ) * ( width + (width / piecesNumber) - peopleH)
+
+            x = marginHere.left + peopleH / 2 + 0.8 * ( ((width) / piecesNumber * i) + ( ( ((width) / piecesNumber) -peopleH )  * (i / piecesNumber) )   )         + 0.2 * ( ((width ) / ((2**piecesNumber) -1 )   ) * 2**i    )
             // x =  marginHere.left + ( width / 10 * i) + ((width / 10) / 2)
 
 

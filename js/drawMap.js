@@ -52,7 +52,7 @@ function drawMap(dataset) {
                         .text(d => d);
 
 
-                    var elmnt = document.getElementById("pieStory");
+                    var elmnt = document.getElementById("pieChartContainer");
                     elmnt.scrollIntoView();
 
                     drawPie.updateCountry(geo.id, SPEED);
