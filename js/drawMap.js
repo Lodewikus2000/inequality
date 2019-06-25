@@ -1,6 +1,6 @@
 function drawMap(dataset) {
 
-    let mapW = 1000;
+    let mapW = 1024;
     let mapH = 500;
 
 
@@ -203,7 +203,7 @@ function drawMap(dataset) {
 
 
         svg.selectAll(".colorAxisLabel")
-            .text("income share");
+            .text("share of GDP");
 
         // Title.
         svg.selectAll(".title")
@@ -223,7 +223,7 @@ function drawMap(dataset) {
         colorScale.domain([incomeMin, incomeMax]);
 
         // Set and update the axis of the legend.
-        dataToLegendScale.domain([incomeMin, incomeMax]);
+        dataToLegendScale.domain([incomeMin * 100, incomeMax * 100]);
         svg.selectAll(".colorAxis").transition(t).call(legendAxis);
 
 

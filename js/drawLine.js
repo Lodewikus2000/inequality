@@ -80,7 +80,8 @@ function drawLine(dataset) {
             return xScale(d.Year);
         })
         .y(function(d) {
-            return yScale(d.Value);
+            // Multiply by 100 for percentages.
+            return yScale(100 *d.Value);
         });
 
 
@@ -170,18 +171,6 @@ function drawLine(dataset) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     function update(country, speed) {
 
 
@@ -192,7 +181,8 @@ function drawLine(dataset) {
         currentData = dataHere.filter(d => d.Variable == "income share" && d.ISO == currentCountry)
 
 
-        let maxValue = d3v5.max(currentData, d => d.Value);
+        // Multiply by 100 for percentages.
+        let maxValue = 100 * d3v5.max(currentData, d => d.Value);
 
         let scaleFactor = 1.1;
         yScale.domain([0, maxValue * scaleFactor]);
@@ -247,7 +237,7 @@ function drawLine(dataset) {
                     return xScale(d.Year)
                 })
                 .attr("cy", function(d) {
-                    return yScale(d.Value)
+                    return yScale(100 * d.Value)
                 })
                 .attr("r", 1);
 

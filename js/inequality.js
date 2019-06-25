@@ -17,15 +17,15 @@ INCOMEGROUPCOLORS = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462'
 
 window.onload = function() {
 
-    let requests = [d3v5.json("data/total.json")]
+    let requests = [d3v5.json("data/total.json"), d3v5.json("data/currencies.json")]
 
     Promise.all(requests).then(function(response) {
 
         let pieCut = false;
 
 
-        let allData = response[0]
-
+        let allData = response[0];
+        let currencies = response[1];
 
         let incomeData = allData.filter(d => d.Variable == "income share" || d.Variable == "average income");
 
@@ -80,7 +80,7 @@ window.onload = function() {
 
 
         drawMap(incomeData);
-        drawPie(incomeData);
+        drawPie(incomeData, currencies);
         drawPie.updateCountry(defaultCountry, 0);
         drawLine(incomeData);
         drawLine.update(defaultCountry, 0);
@@ -98,7 +98,6 @@ window.onload = function() {
 
         });
 
-
         d3v5.select("#divideButton").on("click", function() {
 
             if (pieCut) {
@@ -111,9 +110,7 @@ window.onload = function() {
                 d3v5.select(this).text("Put it back");
             }
 
-
         });
-
 
     });
 };

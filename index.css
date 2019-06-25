@@ -57,7 +57,6 @@ body {
 }
 
 
-
 h1 {
   color: #b967ff;
 }
@@ -65,7 +64,6 @@ h1 {
 
 svg {
   display: block;
-  margin: auto;
 }
 
 .datamap {
@@ -73,6 +71,9 @@ svg {
   display: block;
 }
 
+#pieChart {
+  margin: auto;
+}
 
 #mapContainer {
   margin:auto;
@@ -140,27 +141,6 @@ svg {
 
 
 
-.TotalLegend {
-    fill: #66c2a5;
-}
-
-.FemalesLegend {
-    fill: #fc8d62;
-}
-
-.MalesLegend {
-    fill: #8da0cb;
-}
-
-
-
-.legendText {
-    font-size: .8em;
-}
-
-
-
-
 .title {
   font: 12px sans-serif;
 }
@@ -170,12 +150,12 @@ svg {
 text {
   font: 10px sans-serif;
 }
+
 form {
   position: absolute;
   right: 10px;
   top: 10px;
 }
-
 
 
 

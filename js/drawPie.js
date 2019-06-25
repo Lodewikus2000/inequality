@@ -1,4 +1,4 @@
-function drawPie(dataset) {
+function drawPie(dataset, currencies) {
 
     let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
 
@@ -36,6 +36,8 @@ function drawPie(dataset) {
     let currentData;
     let currentCountry;
 
+    let currenciesHere = currencies;
+
 
     let tooltip = d3v5.select("#tooltip");
 
@@ -66,14 +68,25 @@ function drawPie(dataset) {
             .attr("x", 0.8 * ( (width / piecesNumber * i) + ( ( (width / piecesNumber) -peopleH )  * (i / piecesNumber) )   )         + 0.2 * ( (width  / ((2**piecesNumber) -1 )   ) * 2**i    )               )
             .on("mouseover", function(d){
 
-                let incomeData = currentData.filter(x => x.Percentile == d && x.Variable == "average income")[0];
-                let average = incomeData.Value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
                 let shareData = currentData.filter(x => x.Percentile == d && x.Variable == "income share")[0];
 
+                let averageData = currentData.filter(x => x.Percentile == d && x.Variable == "average income")[0];
+                if (averageData) {
+
+                    let average = averageData.Value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    let currency = currencies.filter(d => d.ISO == currentData[0].ISO)[0].Unit
+                    currency = currency.split(';')[0]
+
+                    tooltip.html("share: " + (Math.round(shareData.Value * 10000) / 100) + "% <br> average income: " + average + " " + currency);
+
+                } else {
+                    tooltip.html("share: " + (Math.round(shareData.Value * 10000) / 100) + "% <br> average income: no data");
+                }
 
 
-                tooltip.html("share: " + (Math.round(shareData.Value * 10000) / 100) + "% <br> average income (local currency): " + average );
+
+
+
                 tooltip.style("visibility", "visible");
             })
             .on("mousemove", function(){
@@ -257,10 +270,23 @@ function drawPie(dataset) {
             .on("mouseover", function(d){
 
 
-                let data = currentData.filter(x => x.Percentile == d.data.Percentile && x.Variable == "average income")[0];
-                let average = data.Value.toLocaleString("en-US", { minimumFractionDigits: 2 });
 
-                tooltip.html("share: " + (Math.round(d.data.Value * 10000) / 100) + "% <br> average income (local currency): " + average );
+                let averageData = currentData.filter(x => x.Percentile == d.data.Percentile && x.Variable == "average income")[0];
+                if (averageData) {
+                    let average = averageData.Value.toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+                    let currency = currencies.filter(d => d.ISO == currentData[0].ISO)[0].Unit
+                    currency = currency.split(';')[0]
+
+                    tooltip.html("share: " + (Math.round(d.data.Value * 10000) / 100) + "% <br> average income: " + average + " " + currency);
+                } else {
+                    tooltip.html("share: " + (Math.round(d.data.Value * 10000) / 100) + "% <br> average income: no data");
+                }
+
+
+
+
+
 
                 tooltip.style("visibility", "visible");
             })
@@ -273,7 +299,7 @@ function drawPie(dataset) {
 
 
         svg.selectAll(".title")
-            .text(currentData[0].Country);
+            .text("Pie chart for " + currentData[0].Country + " in " + currentData[0].Year);
 
 
         if (divided) {
