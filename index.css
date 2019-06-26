@@ -12,7 +12,7 @@ p {
 
 body {
   font-family: helvetica, sans-serif;
-  background-image: linear-gradient(#fffb96, #ff71ce);
+  background-image: linear-gradient(#ffd761, #ff71ce);
   /* background-color: #F8F8F8	; */
   font-size: .8em;
   min-width: 1064px;
@@ -38,18 +38,10 @@ body {
   margin-bottom: 32px;
   margin-left: auto;
   margin-right: auto;
-
   background-color: #F8F8F8;
-
-
-  /* border: 1px solid; */
   padding: 10px;
   box-shadow: 10px 10px #505050;
 }
-
-/* div[class*="col"] {
-  background: #e2deed;
-} */
 
 #lorenz .line {
     fill: none;
@@ -65,11 +57,11 @@ body {
 
 
 h1 {
-  color: #b967ff;
+  color: #1b6a77;
 }
 
 h2 {
-  color: #04E590;
+  color: #1b6a77;
 }
 
 svg {

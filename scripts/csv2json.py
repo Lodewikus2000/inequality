@@ -1,6 +1,6 @@
-# Name: Leo Schreuders
-# Student number: 5742978
-# Made for the course Programmeerproject
+# Made by Leo Schreuders
+# Student number 5742978
+# For the course Programmeerproject
 # Spring 2019
 
 import pandas as pd
@@ -21,12 +21,16 @@ dataframes = []
 
 
 if __name__ == '__main__':
-    pd.set_option("display.max_columns", 999)
+
     country_map = convert.map_countries()
 
+
     def transform(country_name):
+        """
+        Input is a country name, returns an ISO 3 country code.
+        """
+
         if country_name in country_map:
-            # print(country_map[country_name])
             return country_map[country_name]["alpha_3"]
         elif country_name == "USA":
             return country_name
@@ -35,13 +39,10 @@ if __name__ == '__main__':
 
 
 
-
-
-
+    # Make a json with the currency information.
     currency_df = pd.read_csv(CURRENCIES_IN, delimiter=';', usecols=["Country Name", "Unit", ])
     currency_df = currency_df.rename(index=str, columns={"Country Name": "Country", "Unit": "Unit"})
     currency_df = currency_df.drop_duplicates()
-
 
     currency_df['ISO'] = currency_df.apply(lambda row: transform(row['Country']), axis=1)
     currency_df = currency_df.dropna()
@@ -54,16 +55,10 @@ if __name__ == '__main__':
 
 
 
-
+    # Merge the csv's into one dataframe.
     for i in range(len(INPUT_CSV)):
 
         df = pd.read_csv(INPUT_CSV[i], delimiter=';', header=None, names=["Country", "Variable", "Percentile", "Year", "Value"], usecols=["Country", "Variable", "Percentile", "Year", "Value"]) #, usecols=["COU", "Country", "Variable", "Year", "Value"])
-
-
-
-
-
-
 
         df['ISO'] = df.apply(lambda row: transform(row['Country']), axis=1)
 
@@ -74,9 +69,6 @@ if __name__ == '__main__':
         df["Value"] = pd.to_numeric(df["Value"], errors="coerce")
 
         df = df.dropna()
-
-        if i == 2:
-            print(df)
 
         json_data = df.to_json(orient='records')
 
@@ -97,10 +89,6 @@ if __name__ == '__main__':
             if len(selection.index) == 0:
                 pass
             elif len(selection.index) != 11:
-                print(selection)
-                print("-----------------")
-                print(f"dropped combination {country} {year} {LABELS[0]}")
-                print("-----------------")
                 total.drop(total[(total.ISO == country) & (total.Year == year) & (total.Variable == LABELS[0])].index, inplace=True)
 
 

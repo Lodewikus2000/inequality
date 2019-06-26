@@ -74,7 +74,13 @@ function drawPie(dataset, currencies) {
     for (i = 0; i < piecesNumber; i++) {
         people.append('svg:image')
             .data([percentiles[i]])
-            .attr('xlink:href', "img/man1.png")
+            .attr('xlink:href', function() {
+                if (i == piecesNumber - 1) {
+                    return "img/man2.png"
+                } 
+                return "img/man1.png"
+
+            })
             .attr("height", peopleH)
             .attr("width", peopleH)
             .attr("x", linear * ((width / piecesNumber * i) + (((width / piecesNumber) - peopleH) * (i / piecesNumber))) + exponential * ((width / ((2 ** piecesNumber) - 1)) * 2 ** i))
