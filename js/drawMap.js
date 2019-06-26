@@ -1,3 +1,10 @@
+/*
+Made by Leo Schreuders
+Student number: 5742978
+Made for the course Programmeerproject
+Spring 2019
+*/
+
 function drawMap(dataset) {
     /*
     Draw a map where a country's color is based on the share of a certain income group. It is initially drawn to show the top 10 percent.
@@ -159,11 +166,9 @@ function drawMap(dataset) {
         Given a certain income group (percentile), this function selects the data and displays it in the map, and updates the legend.
         */
 
-
         colormap = {}
 
         currentData = []
-
 
         // Get only the entry where year is highest.
         Object.keys(iso2Countries).forEach(function(iso) {
@@ -191,7 +196,6 @@ function drawMap(dataset) {
             case "p0p10":
                 group = "bottom 10%";
                 break;
-
         }
 
 
@@ -205,11 +209,8 @@ function drawMap(dataset) {
 
         let t = d3v5.transition().duration(speed);
 
-
         let incomeMax = d3v5.max(currentData, d => d.Value);
         let incomeMin = d3v5.min(currentData, d => d.Value);
-
-
 
         colorScale.domain([incomeMin, incomeMax]);
 
@@ -224,7 +225,6 @@ function drawMap(dataset) {
             d.fillColor = defaultFillColor;
         });
 
-
         // Update the colors of countries with data.
         currentData.forEach(function(item) {
             let iso = item.ISO;
@@ -235,7 +235,6 @@ function drawMap(dataset) {
             }
         });
 
-        console.log(colorMap);
         map.updateChoropleth(colorMap);
 
     };

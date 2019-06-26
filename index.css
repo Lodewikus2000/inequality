@@ -2,6 +2,13 @@ html {
   scroll-behavior: smooth;
 }
 
+p {
+  text-align: justify;
+}
+
+.buttonWrapper {
+  text-align: center;
+}
 
 body {
   font-family: helvetica, sans-serif;
@@ -61,6 +68,9 @@ h1 {
   color: #b967ff;
 }
 
+h2 {
+  color: #04E590;
+}
 
 svg {
   display: block;
@@ -78,7 +88,6 @@ svg {
 #mapContainer {
   margin:auto;
 }
-
 
 
 .title {
@@ -101,8 +110,6 @@ form {
   font: 10px sans-serif;
   fill: black;
 }
-
-
 
 
 /* The next 2 are copied from the datamaps tooltip for uniformity. */

@@ -1,3 +1,10 @@
+/*
+Made by Leo Schreuders
+Student number: 5742978
+Made for the course Programmeerproject
+Spring 2019
+*/
+
 function drawLorenz(dataset) {
     /*
     Draw a lorenz curve based on the dataset. The main function only initializes the Lorenz curve. updateCountry must then be used to draw an actualy curve.
@@ -5,7 +12,6 @@ function drawLorenz(dataset) {
 
     let lorenzW = 500;
     let lorenzH = 400;
-
 
 
     drawLorenz.updateCountry = updateCountry;
@@ -131,7 +137,6 @@ function drawLorenz(dataset) {
             .attr("transform", "translate(" + (marginHere.left + width  * 0.1) + "," + (marginHere.top + height * 0.1) + ")");
 
 
-
         // Diagonal text.
         lineLegend.append("text").text("equality")
             .attr("x", legendBoxDistance)
@@ -157,19 +162,7 @@ function drawLorenz(dataset) {
             .attr("y", legendBoxDistance - legendBoxSize)
             .style("fill", "#f0027f");
 
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

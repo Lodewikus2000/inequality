@@ -1,3 +1,10 @@
+/*
+Made by Leo Schreuders
+Student number: 5742978
+Made for the course Programmeerproject
+Spring 2019
+*/
+
 function drawPie(dataset, currencies) {
 
     let dataHere = dataset;
@@ -40,7 +47,6 @@ function drawPie(dataset, currencies) {
     drawPie.updateCountry = updateCountry;
     drawPie.divide = divide;
     drawPie.unDivide = unDivide;
-
 
     let currenciesHere = currencies;
 
@@ -127,12 +133,8 @@ function drawPie(dataset, currencies) {
         .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         .range(INCOMEGROUPCOLORS)
 
-
-
     let pie = d3v5.pie()
         .value(d => d.Value);
-
-
 
     let arc = d3v5.arc()
         .innerRadius(0)
@@ -145,10 +147,7 @@ function drawPie(dataset, currencies) {
         return (t) => arc(i(t));
     }
 
-
     function updateYear(year, speed) {
-        console.log("HALLO???")
-
 
         // The top 1 percent is included in the top 10 percent, so we filter them out.
         currentData = dataHere.filter(d => d.ISO == currentCountry && d.Year == year && d.Percentile != "p99p100");
@@ -160,13 +159,10 @@ function drawPie(dataset, currencies) {
         });
 
 
-
         let shares = currentData.filter(d => d.Variable == "income share")
-
 
         let path = svg.selectAll("path")
             .data(pie(shares));
-
 
         path.exit().remove();
 
@@ -176,7 +172,6 @@ function drawPie(dataset, currencies) {
             path.transition().duration(speed).attrTween("d", arcTween);
         }
 
-console.log("hallo");
         path.enter()
             .append("g")
             .attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + marginHere.top) + ")")
@@ -194,9 +189,6 @@ console.log("hallo");
                 this._current = d;
             });
 
-        console.log("jaartje:");
-        console.log(currentData[0]);
-
             svg.select(".title")
                 .text("Pie chart for " + currentData[0].Country + " in " + currentData[0].Year);
         // This makes sure the pieces are centered above the people.
@@ -208,7 +200,6 @@ console.log("hallo");
 
     function updateCountry(country, speed) {
         // This function automatically finds the newest year for which data is available and displays this data.
-
 
         currentCountry = country;
 
@@ -249,7 +240,6 @@ console.log("hallo");
 
         let path = svg.selectAll("path")
             .data(pie(shares));
-
 
 
         path.exit().remove();
@@ -315,8 +305,6 @@ console.log("hallo");
         if (divided) {
             divide(2 * speed);
         }
-
-
     };
 
 
@@ -329,18 +317,13 @@ console.log("hallo");
 
         slices.transition().duration(speed).attr("transform", function(d, i) {
 
-
-
             let rotate = 360 - (d.startAngle + d.endAngle) / 2 / Math.PI * 180;
 
-
             // The distance between pieces is partly linear, partly exponential, because the pieces at the end are sometimes much larger.
-
             let x = marginHere.left + peopleH / 2 + linear * (((width) / piecesNumber * i) + ((((width) / piecesNumber) - peopleH) * (i / piecesNumber))) + exponential * (((width) / ((2 ** piecesNumber) - 1)) * 2 ** i)
             let y = marginHere.top + height - peopleH - textHeight - 8;
 
             return "translate(" + x + "," + y + ") rotate(" + rotate + ")";
-
 
         });
 
@@ -355,7 +338,5 @@ console.log("hallo");
         slices.transition().duration(speed).attr("transform", "translate(" + (pieW / 2) + "," + (pieRadius + marginHere.top) + ")");
 
         divided = false;
-
     }
-
 };

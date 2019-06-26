@@ -1,3 +1,9 @@
+<!-- Made by Leo Schreuders
+Student number: 5742978
+Made for the course Programmeerproject
+Spring 2019 -->
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,18 +68,17 @@
                         Ever since Piketty published Capital in the Twenty-First Century (2013), income inequality is at the center of public debate. A lot of data is available on this subject. This page makes an attempt to give some insight into this data in a way that is easy to understand.
                     </p>
 
-                    <p>
-                        Data from <a href="https://wid.world/">World Inequality Database</a>.
-                    </p>
                 </header>
-
             </div>
         </div>
 
 
         <div class="row">
-
             <div class="col-sm">
+
+                <h2>
+                    Compare the countries
+                </h2>
 
                 <p>
                     This world map shows how much of the national income is obtained by the top 10%, top 1%, or bottom 10% in several countries. As you can see, the top 10% in Europe does not gather as much of the GDP as they do in, for example, Arab countries or the USA. You will also notice that the bottom 10% in Europe takes a relatively large piece of the pie, compared to other parts of the world.
@@ -89,52 +94,54 @@
                 </div>
 
             </div>
-
         </div>
 
 
-
         <nav class="navbar sticky-top navbar-light bg-light" id="navbar">
-
-
                     <label class="dropdown">
                         Select a country:
                         <select id="countrySelect"></select>
                     </label>
 
+
                     <label class="dropdown">
                         Select a year:
                         <select id="yearSelect"></select>
                     </label>
-
         </nav>
 
 
-
-
-
         <div class="row">
-            <div class="col-sm" id="pieChartContainer">
+
+            <div class="col-12">
+
+                <h2>
+                    Slicing the pie
+                </h2>
 
                 <p>
-                    The pie represents the GDP of the selected country in the selected year; the incomes of all people combined. The pie consists of 10 pieces, each piece belonging to 10% of the population.
-                </p>
-                <p>
-                    See how the sizes of these pieces are different across countries and time. In some countries, the top 10 % gathers more than half of all income.
+                    The pie represents the GDP of the selected country in the selected year; the incomes of all people combined. The pie consists of 10 pieces, each piece belonging to 10% of the population. See how the sizes of these pieces are different across countries and time. In some countries, the top 10% gathers more than half of all income.
                 </p>
                 <p>
                     Move the mouse over a pie piece (or a person) to see the exact percentage and the average income in that group.
                 </p>
+
                 <p>
                     Press the button to see how the pieces are distributed across the 10 income groups.
                 </p>
 
-                <label class="button">
-                    <button id="divideButton" type="button">Cut the pie</button>
-                </label>
+                <div class="buttonWrapper">
+                    <label class="button">
+                        <button id="divideButton" type="button">Cut the pie</button>
+                    </label>
+                </div>
+            </div>
 
-                <svg id="pieChart"></svg>
 
+
+            <div class="col-sm" id="pieChartContainer">
+
+                    <svg id="pieChart"></svg>
             </div>
         </div>
 
@@ -143,6 +150,10 @@
 
         <div class="row">
             <div class="col-3" id="lorenzStory">
+                <h2>
+                    The Lorenz curve
+                </h2>
+
                 <p>
                     A <a href="https://en.wikipedia.org/wiki/Lorenz_curve" target="_blank">Lorenz curve</a> is an informative way of showing the income distribution.
                 </p>
@@ -150,7 +161,10 @@
                     The Lorenz curve shows how much of the income is earned by the bottom X %. In a completely equal society, 20% of the people would earn 20% of the income, and 78% of the people would earn 78% would the income, and so on. The curve would then be a perfectly diagonal line. The more the real curve deviates from this diagonal, the more unequal a society's income is distributed.
                 </p>
             </div>
-            <div class="col-9" id="lorenzContainer">
+
+            <div class="col-1"></div>
+
+            <div class="col-8" id="lorenzContainer">
                 <svg id="lorenz"></svg>
             </div>
         </div>
@@ -159,15 +173,22 @@
         <div class="row">
 
             <div class="col-3" id="lineStory">
+
+                <h2>
+                    Change over time
+                </h2>
+
                 <p>
                     This line graph displays the size of the shares of all income groups across time.
                 </p>
                 <p>
-                    You will see that in most countries, the top 10% increased their share of the income in the last decades. An especially interesting (but not surprising) spike in the share of the top 10% can be found in countries that belonged to the Soviet Union, like Russia.
+                    You will see that in most countries, the top 10% increased their share of the income in the last decades. An especially interesting (but not surprising) spike in the share of the top 10% can be found in countries that belonged to the Soviet Union, like Russia. In Saudi Arabia, on the other hand, nothing ever changes at all.
                 </p>
             </div>
 
-            <div class="col-9" id="lineChartContainer">
+            <div class="col-1"></div>
+
+            <div class="col-8" id="lineChartContainer">
                 <svg id="lineChart">
                 </svg>
             </div>
@@ -177,7 +198,12 @@
         <div class="row">
             <div class="col-sm">
                 <footer>
-                    <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+                    <p>
+                        Data from <a href="https://wid.world/">World Inequality Database</a>.
+                    </p>
+                    <p>
+                        Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+                    </p>
                 </footer>
             </div>
         </div>

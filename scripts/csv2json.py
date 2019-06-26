@@ -1,5 +1,7 @@
 # Name: Leo Schreuders
 # Student number: 5742978
+# Made for the course Programmeerproject
+# Spring 2019
 
 import pandas as pd
 import csv
@@ -16,7 +18,6 @@ OUTPUT_JSON = ["..\\data\\income_pre_tax.json", "..\\data\\income_pre_p99p100.js
 CURRENCIES_IN = "..\\data\\currencies.csv"
 CURRENCIES_OUT = "..\\data\\currencies.json"
 dataframes = []
-
 
 
 if __name__ == '__main__':

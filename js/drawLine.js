@@ -1,3 +1,10 @@
+/*
+Made by Leo Schreuders
+Student number: 5742978
+Made for the course Programmeerproject
+Spring 2019
+*/
+
 function drawLine(dataset) {
     /*
     Draw a line curve of income shares based on the dataset. The main function only initializes the elements. UpdateCountry must be called to actually draw the graph.
@@ -133,7 +140,6 @@ function drawLine(dataset) {
     }
 
 
-
     let tooltip = d3v5.select("#tooltip");
 
     let tooltipLine = svg.append('line');
@@ -183,8 +189,6 @@ function drawLine(dataset) {
             .style('left', d3v5.event.pageX + 20 + "px")
             .style('top', d3v5.event.pageY - 100 + "px")
     }
-
-
 
 
     function updateCountry(country, speed) {
