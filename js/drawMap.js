@@ -1,4 +1,13 @@
 function drawMap(dataset) {
+    /*
+    Draw a map where a country's color is based on the share of a certain income group. It is initially drawn to show the top 10 percent.
+    */
+
+    let dataHere = dataset;
+
+    let currentData;
+
+    let INCOMESCALECOLORS = ["#fde0dd", "#c51b8a"];
 
     let mapW = 1024;
     let mapH = 500;
@@ -14,30 +23,15 @@ function drawMap(dataset) {
         bottom: 20
     };
 
-
-    // The year determines what year the map shows initially.
-
-
     drawMap.update = update;
 
-    var dataHere = dataset;
-
-    let currentData;
-
-
-    // Help from http://jsbin.com/kuvojohapi/1/edit?html,output.
-
     d3v5.select("#mapContainer").style("width", mapW + "px").style("height", mapH + "px").style("position", "relative");
-
-
 
     let defaultFillColor = '#B8B8B8';
     let colorScale = d3v5.scaleLinear()
         .range(INCOMESCALECOLORS)
 
-
     var colorMap = {};
-
 
     let map = new Datamap({
         element: document.getElementById("mapContainer"),
@@ -56,7 +50,7 @@ function drawMap(dataset) {
                     elmnt.scrollIntoView();
 
                     drawPie.updateCountry(geo.id, SPEED);
-                    drawLine.update(geo.id, SPEED);
+                    drawLine.updateCountry(geo.id, SPEED);
                     drawLorenz.updateCountry(geo.id, SPEED);
 
                 }
@@ -161,11 +155,10 @@ function drawMap(dataset) {
 
 
     function update(percentile, speed) {
+        /*
+        Given a certain income group (percentile), this function selects the data and displays it in the map, and updates the legend.
+        */
 
-
-        let newestData = []
-
-        // only select the newest data
 
         colormap = {}
 
@@ -208,8 +201,6 @@ function drawMap(dataset) {
         // Title.
         svg.selectAll(".title")
             .text("income share of "+ group +" (before taxes)");
-
-
 
 
         let t = d3v5.transition().duration(speed);

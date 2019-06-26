@@ -64,3 +64,12 @@ Merged the 2 buttons to divide and undivide the pie into one toggle button.
 Met with Jasper, his opinion is that most of it is done.
 Added average income data. Hovering over the pie chart or the people in the pie chart now shows the average income for this group.
 It looks like the spacing of the people in the pie chart could be less linear, as the last one or two people need more space.
+
+# Day 15
+Added data for average incomes per income group.
+
+# Day 16
+Added the currency units, because "200,000 local currency" is not as informative as "200,00 USD".
+
+
+# Day 17

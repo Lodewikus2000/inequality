@@ -59,7 +59,7 @@
                     </p>
 
                     <p>
-                        Ever since Piketty published Capital in the Twenty-First Century (2013), income inequality is at the center of public debate. A lot of data is available on this subject. This page makes an attempt to give some insight into this data. 
+                        Ever since Piketty published Capital in the Twenty-First Century (2013), income inequality is at the center of public debate. A lot of data is available on this subject. This page makes an attempt to give some insight into this data in a way that is easy to understand.
                     </p>
 
                     <p>
@@ -75,11 +75,12 @@
 
             <div class="col-sm">
 
-                <p> This world map shows how rich (or poor) the richest (or poorest) group of people in a country is.
+                <p>
+                    This world map shows how much of the national income is obtained by the top 10%, top 1%, or bottom 10% in several countries. As you can see, the top 10% in Europe does not gather as much of the GDP as they do in, for example, Arab countries or the USA. You will also notice that the bottom 10% in Europe takes a relatively large piece of the pie, compared to other parts of the world.
                 </p>
 
                 <label class="dropdown">
-                    Select which group the map should display:
+                    Select a group to display in the map:
                     <select id="mapSelect">
                     </select>
                 </label>
@@ -115,6 +116,19 @@
         <div class="row">
             <div class="col-sm" id="pieChartContainer">
 
+                <p>
+                    The pie represents the GDP of the selected country in the selected year; the incomes of all people combined. The pie consists of 10 pieces, each piece belonging to 10% of the population.
+                </p>
+                <p>
+                    See how the sizes of these pieces are different across countries and time. In some countries, the top 10 % gathers more than half of all income.
+                </p>
+                <p>
+                    Move the mouse over a pie piece (or a person) to see the exact percentage and the average income in that group.
+                </p>
+                <p>
+                    Press the button to see how the pieces are distributed across the 10 income groups.
+                </p>
+
                 <label class="button">
                     <button id="divideButton" type="button">Cut the pie</button>
                 </label>
@@ -128,12 +142,15 @@
 
 
         <div class="row">
-            <div class="col-2" id="lorenzStory">
+            <div class="col-3" id="lorenzStory">
                 <p>
-                    This is how a lorenz curve works:
+                    A <a href="https://en.wikipedia.org/wiki/Lorenz_curve" target="_blank">Lorenz curve</a> is an informative way of showing the income distribution.
+                </p>
+                <p>
+                    The Lorenz curve shows how much of the income is earned by the bottom X %. In a completely equal society, 20% of the people would earn 20% of the income, and 78% of the people would earn 78% would the income, and so on. The curve would then be a perfectly diagonal line. The more the real curve deviates from this diagonal, the more unequal a society's income is distributed.
                 </p>
             </div>
-            <div class="col-10" id="lorenzContainer">
+            <div class="col-9" id="lorenzContainer">
                 <svg id="lorenz"></svg>
             </div>
         </div>
@@ -141,13 +158,16 @@
 
         <div class="row">
 
-            <div class="col-2" id="lineStory">
+            <div class="col-3" id="lineStory">
                 <p>
-                    Little textje about the linegraph:
+                    This line graph displays the size of the shares of all income groups across time.
+                </p>
+                <p>
+                    You will see that in most countries, the top 10% increased their share of the income in the last decades. An especially interesting (but not surprising) spike in the share of the top 10% can be found in countries that belonged to the Soviet Union, like Russia.
                 </p>
             </div>
 
-            <div class="col-10" id="lineChartContainer">
+            <div class="col-9" id="lineChartContainer">
                 <svg id="lineChart">
                 </svg>
             </div>

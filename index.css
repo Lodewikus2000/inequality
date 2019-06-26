@@ -20,7 +20,7 @@ body {
 
 
 .container {
-  min-width: 1064px;
+  min-width: 1100px;
   width: auto;
 }
 
@@ -79,72 +79,11 @@ svg {
   margin:auto;
 }
 
-.linep0p10 {
-    fill: none;
-    stroke: #a6cee3;
-    stroke-width: 3;
-}
-
-.linep10p20 {
-    fill: none;
-    stroke: #1f78b4;
-    stroke-width: 3;
-}
-
-.linep20p30 {
-    fill: none;
-    stroke: #b2df8a;
-    stroke-width: 3;
-}
-
-.linep30p40 {
-    fill: none;
-    stroke: #33a02c;
-    stroke-width: 3;
-}
-
-.linep40p50 {
-    fill: none;
-    stroke: #fb9a99;
-    stroke-width: 3;
-}
-
-.linep50p60 {
-    fill: none;
-    stroke: #e31a1c;
-    stroke-width: 3;
-}
-
-.linep60p70 {
-    fill: none;
-    stroke: #fdbf6f;
-    stroke-width: 3;
-}
-
-.linep70p80 {
-    fill: none;
-    stroke: #ff7f00;
-    stroke-width: 3;
-}
-
-.linep80p90 {
-    fill: none;
-    stroke: #cab2d6;
-    stroke-width: 3;
-}
-
-.linep90p100 {
-    fill: none;
-    stroke: #6a3d9a;
-    stroke-width: 3;
-}
-
 
 
 .title {
   font: 12px sans-serif;
 }
-
 
 
 text {
@@ -158,22 +97,11 @@ form {
 }
 
 
-
-.pieTip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
+.legendText{
+  font: 10px sans-serif;
+  fill: black;
 }
 
-
-
-/* .datamaps-hoverover {
-  display: none;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-} */
 
 
 

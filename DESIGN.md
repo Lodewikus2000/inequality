@@ -17,7 +17,9 @@ I will use pandas in python to import the csv, filter if, and then save it in JS
 
 2: Pie chart.
 
-3: Line graph.
+3: Lorenz curve.
+
+4: Line graph.
 
 
 
@@ -29,9 +31,9 @@ currentCountry: ISO code of the last country the user clicked on;
 currentYear: last year the user selected;
 
 ### Map
-Country code calculated based on gini coefficient with a d3 colorScale. Mousing over the country shows the number of the gini coefficient.
-A legend shows the relationship between colors and gini values.
-Clicking a country changes views 2 and 3 to display information of the clicked country.
+Country color calculated based on share of income of top 10%, top 1%, or bottom 10%, with a d3 colorScale. Mousing over the country shows that number.
+A legend shows the relationship between colors and share.
+Clicking a country changes views 2, 3 and 4 to display information of the clicked country.
 This works by sending the geograhpy.id to a new function to update the pie chart.
 Needed:
 - data of gini-coefficient;

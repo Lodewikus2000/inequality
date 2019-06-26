@@ -1,25 +1,15 @@
-
-
-var defaultCountry = "NLD";
-
-
 var countries2ISO = {};
 var iso2Countries = {};
-
-
-var currentYear = 2015;
-
-
-const SPEED = 1500;
-
-INCOMESCALECOLORS = ["#fde0dd", "#c51b8a"];
-INCOMEGROUPCOLORS = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9','#bc80bd'];
+var INCOMEGROUPCOLORS = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
+var SPEED = 1500;
 
 window.onload = function() {
 
     let requests = [d3v5.json("data/total.json"), d3v5.json("data/currencies.json")]
 
     Promise.all(requests).then(function(response) {
+
+        let defaultCountry = "NLD";
 
         let pieCut = false;
 
@@ -47,7 +37,7 @@ window.onload = function() {
 
             var countryName = d3v5.select("#countrySelect").node().value;
             drawPie.updateCountry(countries2ISO[countryName], SPEED);
-            drawLine.update(countries2ISO[countryName], SPEED)
+            drawLine.updateCountry(countries2ISO[countryName], SPEED)
             drawLorenz.updateCountry(countries2ISO[countryName], SPEED);
 
         });
@@ -62,7 +52,6 @@ window.onload = function() {
         mapSelect.on("change", function() {
 
             var percentile = d3.select("#mapSelect").node().value;
-            console.log(percentile)
 
             switch(percentile) {
                 case "top 1%":
@@ -83,7 +72,7 @@ window.onload = function() {
         drawPie(incomeData, currencies);
         drawPie.updateCountry(defaultCountry, 0);
         drawLine(incomeData);
-        drawLine.update(defaultCountry, 0);
+        drawLine.updateCountry(defaultCountry, 0);
 
         drawLorenz(incomeData);
         drawLorenz.updateCountry(defaultCountry, 0);

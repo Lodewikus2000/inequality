@@ -1,11 +1,18 @@
 function drawLine(dataset) {
+    /*
+    Draw a line curve of income shares based on the dataset. The main function only initializes the elements. UpdateCountry must be called to actually draw the graph.
+    */
 
-    let lineW = 600;
+    let dataHere = dataset;
+    let currentData;
+
+
+    let lineW = 640;
     let lineH = 400;
 
     let marginHere = {
         left: 40,
-        right: 20,
+        right: 100,
         top: 40,
         bottom: 40
     };
@@ -14,19 +21,12 @@ function drawLine(dataset) {
     let height = lineH - marginHere.top - marginHere.bottom;
 
 
-    let currentCountry;
-    let currentCountryName;
-
-
-
     let percentiles = ["p0p10", "p10p20", "p20p30", "p30p40", "p40p50", "p50p60", "p60p70", "p70p80", "p80p90", "p90p100"];
 
-    drawLine.update = update;
+    drawLine.updateCountry = updateCountry;
 
     // Used help from https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0/
 
-    let dataHere = dataset;
-    let currentData;
 
     let svg = d3v5.select("#lineChart").attr("width", lineW).attr("height", lineH);
 
@@ -60,7 +60,7 @@ function drawLine(dataset) {
         .attr("transform", "translate(" + marginHere.left + "," + marginHere.top + ")")
         .call(d3v5.axisLeft(yScale));
 
-    // Element for y label.
+    // G element for y label.
     svg.append("g")
         .attr("class", "y-axis")
         .append("text")
@@ -92,31 +92,47 @@ function drawLine(dataset) {
         .style("text-anchor", "begin")
         .style("fill", "black");
 
+    drawLegend();
 
-    // // Draw the legend with help from https://stackoverflow.com/questions/38954316/adding-legends-to-d3-js-line-charts.
-    // let legendBoxSize = 10;
-    // let legendBoxDistance = 16;
-    //
-    // let legend_keys = ["Females", "Total", "Males"]
-    //
-    // let lineLegend = svg.selectAll(".lineLegend").data(legend_keys)
-    //     .enter().append("g")
-    //     .attr("class", "lineLegend")
-    //     .attr("transform", "translate(" + (margin.left + lineW * .8) + "," + (lineH * .8) + ")");
-    //
-    // lineLegend.append("text").text(d => d)
-    //     .attr("class", "legendText")
-    //     .attr("x", legendBoxDistance)
-    //     .attr("y", function(d, i) {
-    //         return i * legendBoxDistance;
-    //     });
-    //
-    // lineLegend.append("rect")
-    //     .attr("class", d => d + "Legend")
-    //     .attr("width", legendBoxSize).attr("height", legendBoxSize)
-    //     .attr("y", function(d, i) {
-    //         return i * legendBoxDistance - (legendBoxSize);
-    //     });
+    function drawLegend() {
+        /*
+        Here we draw the legend.
+        */
+
+        // Draw the legend with help from https://stackoverflow.com/questions/38954316/adding-legends-to-d3-js-line-charts.
+        let legendBoxSize = 10;
+        let legendBoxDistance = 16;
+
+
+        let lineLegend = svg.append("g")
+            .attr("class", "lineLegend")
+            .attr("transform", "translate(" + (marginHere.left + width + marginHere.right * 0.2) + "," + (marginHere.top) + ")");
+
+
+        for (i = 0; i < percentiles.length; i++) {
+
+            let index = percentiles.length - i - 1;
+
+            lineLegend.append("text").text(index * 10 + " to " + (index + 1) * 10 + "%")
+                .attr("class", "legendText")
+                .attr("x", legendBoxDistance)
+                .attr("y", function() {
+                    return i * legendBoxDistance;
+                })
+                .style("fill", "black");;
+
+            lineLegend.append("rect")
+                .attr("class", "legend" + percentiles[i])
+                .attr("width", legendBoxSize).attr("height", legendBoxSize)
+                .attr("y", function() {
+                    return i * legendBoxDistance - (legendBoxSize);
+                })
+                .style("fill", INCOMEGROUPCOLORS[index]);
+
+            }
+    }
+
+
 
     let tooltip = d3v5.select("#tooltip");
 
@@ -171,19 +187,20 @@ function drawLine(dataset) {
 
 
 
-    function update(country, speed) {
-
-
-        currentCountry = country;
+    function updateCountry(country, speed) {
+        /*
+        This function selects the correct data based on the given country, and draws a line graph from it.
+        */
 
         let t = d3v5.transition().duration(speed);
 
-        currentData = dataHere.filter(d => d.Variable == "income share" && d.ISO == currentCountry)
+        currentData = dataHere.filter(d => d.Variable == "income share" && d.ISO == country)
 
 
         // Multiply by 100 for percentages.
         let maxValue = 100 * d3v5.max(currentData, d => d.Value);
 
+        // We make the domain of the y-axis a little higher than the highest value.
         let scaleFactor = 1.1;
         yScale.domain([0, maxValue * scaleFactor]);
 
@@ -207,21 +224,20 @@ function drawLine(dataset) {
                 .attr("class", "line" + percentiles[i])
                 .merge(lines)
                 .transition(t)
-                .attr("d", valueLine);
+                .attr("d", valueLine)
+                .style("stroke", INCOMEGROUPCOLORS[i])
+                .style("fill", "none")
+                .style("stroke-width", "3px");
         }
-
 
 
         svg.selectAll(".y-axis").transition(t).call(yAxis);
         svg.selectAll(".x-axis").transition(t).call(xAxis);
 
 
-
         title.transition(t).text("Income shares over time in " + currentData[0].Country);
 
-
-
-        // Dots.
+        // Update the dots.
         for (i = 0; i < percentiles.length; i++) {
 
             let dots = svg.selectAll(".dot" + percentiles[i]).data(currentData.filter(d => d.Percentile == percentiles[i]));
@@ -243,7 +259,7 @@ function drawLine(dataset) {
 
         }
 
-        // This makes it so the lines will not prevent the tooltip from being drawn.
+        // This puts the detection box for the tooltip in front, to prevent a flickering tooltip.
         tooltipBox.raise();
 
     }

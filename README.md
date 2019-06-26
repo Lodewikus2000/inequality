@@ -9,7 +9,7 @@ Data on inequality is widely available, but there is no easy to understand visua
 
 ## Solution
 
-The solution is a visualization of inequality data in human terms, for people who are not experts at readings graphs, mainly focused on income and wealth inequality, in a relatable way.
+The solution is a visualization of inequality data in human terms, for people who are not experts at readings graphs, mainly focused on income inequality, in a relatable way.
 
 
 ### Main features
@@ -18,9 +18,10 @@ The solution is a visualization of inequality data in human terms, for people wh
 
 
 #### Minimum viable product
-View 1 : a world map where the user can select a country. Country color based on some measure of inequality.
-View 2: a country's national income (or wealth) divided over 10 or 100 people. The representation of the share of income (or wealth) can be a bar chart where the bars are made to look like money, or parts of a pie chart.
-View 3: a graph view: something over time?
+View 1 : a world map where the user can select a country. Country color based on share of top 10%, top 1%, or bottom 10%.
+View 2: a country's national income divided over 10 people. The representation of the share of income is a pie chart, and the pieces of the pie chart can be distributed over the 10 people.
+View 3: Lorenz curve based on the data.
+View 4: a graph view: something over time?
 
 #### Optional
 Information about inequality when it comes to health, government spending on social programs.
@@ -43,3 +44,11 @@ It's unclear what the % share buttons do, the line graph at the bottom is not to
 ### Hardest parts
 
 Animations, combining data from several databases.
+
+### Sources
+
+Help with the updating of the pie:
+https://bl.ocks.org/adamjanes/5e53cfa2ef3d3f05828020315a3ba18c/22619fa86de2045b6eeb4060e747c5076569ec47
+
+Help for the line graph:
+https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0/

@@ -1,5 +1,5 @@
 We mostly follow this style: https://www.w3schools.com/js/js_conventions.asp
-with some exceptions
+with some exceptions.
 
 # Indentation
 We use 4 spaces for indentation
