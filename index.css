@@ -22,9 +22,7 @@ body {
 #navbar {
   box-shadow: 10px 10px #505050;
   background-color: #F8F8F8;
-
 }
-
 
 .container {
   min-width: 1100px;
@@ -55,13 +53,12 @@ body {
     stroke-width: 3;
 }
 
-
 h1 {
-  color: #1b6a77;
+  color: #404040;
 }
 
 h2 {
-  color: #1b6a77;
+  color: #404040;
 }
 
 svg {
@@ -86,7 +83,6 @@ svg {
   font: 12px sans-serif;
 }
 
-
 text {
   font: 10px sans-serif;
 }
@@ -96,7 +92,6 @@ form {
   right: 10px;
   top: 10px;
 }
-
 
 .legendText{
   font: 10px sans-serif;

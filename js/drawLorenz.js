@@ -59,7 +59,7 @@ function drawLorenz(dataset) {
         .attr("y", 32)
         .style("text-anchor", "end")
         .style("fill", "black")
-        .text("cumulative share of people");
+        .text("cumulative share of people (%)");
 
 
     // Scale for y.
@@ -81,7 +81,7 @@ function drawLorenz(dataset) {
         .style("text-anchor", "end")
         .attr("transform", "rotate(-90)")
         .style("fill", "black")
-        .text("cumulative share of income");
+        .text("cumulative share of income (%)");
 
 
     // Define the line for the graph.

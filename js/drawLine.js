@@ -78,7 +78,7 @@ function drawLine(dataset) {
 
         .attr("transform", "rotate(-90)")
         .style("fill", "black")
-        .text("share of income");
+        .text("share of income (%)");
 
 
     // Define the line for the graph.

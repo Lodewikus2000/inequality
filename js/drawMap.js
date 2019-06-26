@@ -200,7 +200,7 @@ function drawMap(dataset) {
 
 
         svg.selectAll(".colorAxisLabel")
-            .text("share of GDP");
+            .text("share of GDP (%)");
 
         // Title.
         svg.selectAll(".title")
