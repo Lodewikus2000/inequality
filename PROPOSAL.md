@@ -14,7 +14,7 @@ The solution is a visualization of inequality data in human terms, for people wh
 
 ### Main features
 
-![idea](doc/02.png "idea")
+![idea](doc/proposal2.png "idea")
 
 
 #### Minimum viable product
@@ -38,7 +38,7 @@ D3 datamap,
 ### Similar visualizations
 
 Take this example from the World Inequality Database:
-![bad example](doc/01.png "I don't like this")
+![bad example](doc/proposal1.png "I don't like this")
 It's unclear what the % share buttons do, the line graph at the bottom is not too informative. The whole visualization does not communicate anything to anyone who is not already very interested in this subject.
 
 ### Hardest parts
