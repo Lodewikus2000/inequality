@@ -4,9 +4,15 @@
 ## Link
 https://lodewikus2000.github.io/inequality/
 
+## Video
+https://youtu.be/vcVdB14DPDo
+
 ## The website
 
 This website shows income inequality data in a way that is easy to understand.
+
+![main](doc/main.png)
+
 
 
 ### Main features
@@ -37,8 +43,8 @@ The Lorenz curve is a way of showing the cumulative income distribution. It is u
 
 
 #### Line chart
-The line chart shows the development of income shares over time for the ten groups that are also shown in the pie chart. Moving the mouse over the graph shows the exact number for every group.
-It is updated with an animation as the user selects a different country.
+The line chart shows the development of income shares over time for the ten groups that are also shown in the pie chart. Moving the mouse over the graph shows the exact number for every group. It is updated with an animation as the user selects a different country.
+
 ![line](doc/line.png)
 
 
@@ -69,7 +75,12 @@ https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0/
 Human icon:
 https://www.flaticon.com/free-icon/standing-frontal-man-silhouette_10633#term=frontal%20man&page=1&position=1
 
+Pie chart and line graph colors from:
+http://colorbrewer2.org
+
 
 #### License
 
 Income inequality around the world by Leo Schreuders is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+
+D3 licensed under https://github.com/d3/d3/blob/master/LICENSE.

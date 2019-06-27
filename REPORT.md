@@ -8,7 +8,7 @@ https://lodewikus2000.github.io/inequality/
 
 This website shows income inequality data in a way that is easy to understand, with nice looking, simple graphs.
 
-![pie3](doc/pie3.png)
+![main](doc/main.png)
 
 
 ## Technical design
@@ -111,7 +111,7 @@ Data is filtered from dataHere and saved in currentData. We select the lines and
 ## Challenges
 
 ### Dropping the gini coefficient
-Initially, I wanted the colors of the country to be based on the gini coefficient, but the set of countries for which gini data was available was not the same as the set of countries for which income share data was avaible. This made for a confusing situation where grey countries could actually be clicked for more info, and countries with a color could not be clicked. I made the decision to drop the gini data, and just focus on the shares of GDP, as it makes the user experience much easier.
+Initially, I wanted the colors of the country to be based on the gini coefficient, but the set of countries for which gini data was available was not the same as the set of countries for which income share data was avaible. This made for a confusing situation where grey countries could actually be clicked for more info, and countries with a color could not be clicked. I made the decision to drop the gini data, and just focus on the shares of GDP, as it makes the user experience much easier. Instead, the user can now select to display the top 10%, top 1% or bottom 10%.
 
 ### No year selector for the map
 The map was supposed to have a dropdown menu where the user could select a year to display. But not all countries have data available for the same years, so the user could not always compare all countries. Also, some countries would be greyed out, which gave the impression they were not clickable. I decided that changing the year was not too informative to begin with, as the relations between countries didn't change much over the years. I decided to remove the year selector, and just select the newest year for every country. So now the map displays data from different years, but the difference is never large.
