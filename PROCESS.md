@@ -1,4 +1,5 @@
 # Day 1
+Was not aware of the website.
 
 # Day 2
 Obtained and parsed data for income share after taxes.
@@ -6,6 +7,7 @@ Obtained and parsed gini coefficient data.
 
 
 # Day 3
+Met with Nigel and discussed the proposal and the work I've done so far.
 Adding ISO country codes to data.
 Using pycountry-convert 0.7.2
 
@@ -53,17 +55,21 @@ Out of office.
 
 # Day 12
 Obtained and processed data for top 1 percent.
+The d3 tip is not very useful. I wrote my own tooltip and based it on the way it looks on the datamap.
 
 # Day 13
 Added a dropdown menu to select what the map should display (top 1, top 10, or bottom 10).
 Added a lorenz curve.
 Worked on the overall layout.
 Merged the 2 buttons to divide and undivide the pie into one toggle button.
+Gini data no longer plays any role, so I deleted it all.
 
 # Day 14
 Met with Jasper, his opinion is that most of it is done.
 Added average income data. Hovering over the pie chart or the people in the pie chart now shows the average income for this group.
 It looks like the spacing of the people in the pie chart could be less linear, as the last one or two people need more space.
+
+# Weekend
 
 # Day 15
 Added data for average incomes per income group.
@@ -73,3 +79,7 @@ Added the currency units, because "200,000 local currency" is not as informative
 
 
 # Day 17
+Various bug fixes and layout changes.
+
+# Day 18
+Finished readme. Found a license. Cleaning github.

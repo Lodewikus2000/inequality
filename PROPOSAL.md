@@ -19,9 +19,10 @@ The solution is a visualization of inequality data in human terms, for people wh
 
 #### Minimum viable product
 View 1 : a world map where the user can select a country. Country color based on share of top 10%, top 1%, or bottom 10%.
+
 View 2: a country's national income divided over 10 people. The representation of the share of income is a pie chart, and the pieces of the pie chart can be distributed over the 10 people.
-View 3: Lorenz curve based on the data.
-View 4: a graph view: something over time?
+
+View 3: a graph view: something over time?
 
 #### Optional
 Information about inequality when it comes to health, government spending on social programs.
